@@ -1,132 +1,414 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Page Designer</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&family=Almarai:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Cairo,sans-serif;
+}
+
+body{
+background:#f5f7fa;
+padding:20px;
+}
+
+.designer-layout{
+display:grid;
+grid-template-columns:420px 1fr;
+gap:25px;
+align-items:start;
+}
+
+.designer-panel{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.designer-card{
+background:#fff;
+padding:18px;
+border-radius:18px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.designer-card h3{
+font-size:16px;
+margin-bottom:15px;
+color:#222;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.designer-card label{
+display:block;
+margin-top:12px;
+margin-bottom:6px;
+font-size:14px;
+font-weight:bold;
+color:#444;
+}
+
+.designer-card input,
+.designer-card select{
+width:100%;
+padding:10px;
+border:1px solid #ddd;
+border-radius:10px;
+}
+
+.shape-options{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
+}
+
+.shape-options button{
+border:none;
+padding:12px;
+background:#0b7dbd;
+color:white;
+cursor:pointer;
+border-radius:10px;
+font-weight:bold;
+}
+
+.phone-preview-wrapper{
+display:flex;
+justify-content:center;
+}
+
+.phone-frame{
+width:390px;
+height:800px;
+background:#111;
+padding:12px;
+border-radius:45px;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+.preview-screen{
+height:100%;
+border-radius:35px;
+overflow:auto;
+padding:25px;
+background:#0b7dbd;
+color:white;
+text-align:center;
+}
+
+.preview-logo img{
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:50%;
+border:4px solid rgba(255,255,255,.4);
+}
+
+#previewTitle{
+margin-top:15px;
+font-size:28px;
+}
+
+#previewDesc{
+margin-top:10px;
+opacity:.9;
+}
+
+.preview-links{
+margin-top:25px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.preview-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+padding:15px;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(10px);
+border-radius:18px;
+font-size:18px;
+font-weight:bold;
+color:white;
+text-decoration:none;
+}
+
+.preview-btn i{
+font-size:22px;
+}
+
+@media(max-width:1000px){
+
+.designer-layout{
+grid-template-columns:1fr;
+}
+
+.phone-frame{
+width:100%;
+max-width:390px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
 <div class="designer-layout">
 
-    <!-- لوحة التحكم -->
-    <div class="designer-panel">
+<div class="designer-panel">
 
-        <div class="designer-card">
-            <h3>🖼️ أدوات الخلفية العامة</h3>
+<div class="designer-card">
+<h3>
+<i class="fa-solid fa-image"></i>
+خلفية الصفحة
+</h3>
 
-            <label>صورة خلفية الصفحة</label>
-            <input type="file" id="bgImageInput" accept="image/*">
+<label>صورة الخلفية</label>
+<input type="file" id="bgImageInput">
 
-            <label>لون الخلفية</label>
-            <input type="color" id="bgColorPicker" value="#0b7dbd">
-        </div>
-
-        <div class="designer-card">
-            <h3>🖼️ خلفية الأزرار</h3>
-
-            <label>صورة خلفية الأزرار</label>
-            <input type="file" id="btnBgInput" accept="image/*">
-
-            <label>لون الأزرار</label>
-            <input type="color" id="btnColorPicker" value="#ffffff">
-        </div>
-
-        <div class="designer-card">
-            <h3>🔤 الألوان والخطوط</h3>
-
-            <label>لون النص</label>
-            <input type="color" id="textColorPicker" value="#ffffff">
-
-            <label>نوع الخط</label>
-            <select id="fontSelector">
-                <option value="Cairo">Cairo</option>
-                <option value="Tajawal">Tajawal</option>
-                <option value="Almarai">Almarai</option>
-                <option value="Changa">Changa</option>
-            </select>
-
-            <label>حجم الخط</label>
-            <input type="range" id="fontSizeRange"
-                   min="12" max="40" value="18">
-        </div>
-
-        <div class="designer-card">
-            <h3>🔘 استدارة الأزرار</h3>
-
-            <label>شكل الأزرار</label>
-
-            <div class="shape-options">
-
-                <button type="button"
-                        onclick="setRadius(0)">
-                    مربع
-                </button>
-
-                <button type="button"
-                        onclick="setRadius(20)">
-                    نصف دائري
-                </button>
-
-                <button type="button"
-                        onclick="setRadius(50)">
-                    دائري
-                </button>
-
-                <button type="button"
-                        onclick="setRadius(100)">
-                    زجاجي
-                </button>
-
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- شاشة المعاينة -->
-    <div class="phone-preview-wrapper">
-
-        <div class="phone-frame">
-
-            <div id="livePreview" class="preview-screen">
-
-                <div class="preview-logo">
-                    <img id="previewLogo"
-                         src="assets/default-logo.png">
-                </div>
-
-                <h1 id="previewTitle">
-                    اسم النشاط
-                </h1>
-
-                <p id="previewDesc">
-                    وصف النشاط التجاري
-                </p>
-
-                <div class="preview-links">
-
-                    <a class="preview-btn">
-                        رقم الهاتف
-                    </a>
-
-                    <a class="preview-btn">
-                        واتساب
-                    </a>
-
-                    <a class="preview-btn">
-                        فيسبوك
-                    </a>
-
-                    <a class="preview-btn">
-                        انستجرام
-                    </a>
-
-                    <a class="preview-btn">
-                        الموقع الإلكتروني
-                    </a>
-
-                    <a class="preview-btn">
-                        خريطة الموقع
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-<script src="js/page-designer.js"></script>
+<label>لون الخلفية</label>
+<input type="color"
+id="bgColorPicker"
+value="#0b7dbd">
 </div>
+
+<div class="designer-card">
+<h3>
+<i class="fa-solid fa-square"></i>
+خلفية الأزرار
+</h3>
+
+<label>صورة الأزرار</label>
+<input type="file" id="btnBgInput">
+
+<label>لون الأزرار</label>
+<input type="color"
+id="btnColorPicker"
+value="#ffffff">
+</div>
+
+<div class="designer-card">
+<h3>
+<i class="fa-solid fa-font"></i>
+الألوان والخطوط
+</h3>
+
+<label>لون النص</label>
+<input type="color"
+id="textColorPicker"
+value="#ffffff">
+
+<label>نوع الخط</label>
+<select id="fontSelector">
+<option value="Cairo">Cairo</option>
+<option value="Tajawal">Tajawal</option>
+<option value="Almarai">Almarai</option>
+<option value="Changa">Changa</option>
+</select>
+
+<label>حجم الخط</label>
+<input type="range"
+id="fontSizeRange"
+min="12"
+max="40"
+value="18">
+</div>
+
+<div class="designer-card">
+<h3>
+<i class="fa-solid fa-shapes"></i>
+شكل الأزرار
+</h3>
+
+<div class="shape-options">
+
+<button onclick="setRadius(0)">
+مربع
+</button>
+
+<button onclick="setRadius(15)">
+ناعمة
+</button>
+
+<button onclick="setRadius(30)">
+دائرية
+</button>
+
+<button onclick="setRadius(100)">
+كبسولة
+</button>
+
+</div>
+</div>
+
+</div>
+
+<div class="phone-preview-wrapper">
+
+<div class="phone-frame">
+
+<div id="livePreview"
+class="preview-screen">
+
+<div class="preview-logo">
+<img
+id="previewLogo"
+src="https://via.placeholder.com/120">
+</div>
+
+<h1 id="previewTitle">
+اسم النشاط
+</h1>
+
+<p id="previewDesc">
+وصف النشاط التجاري
+</p>
+
+<div class="preview-links">
+
+<a class="preview-btn">
+<i class="fa-solid fa-phone"></i>
+اتصال
+</a>
+
+<a class="preview-btn">
+<i class="fa-brands fa-whatsapp"></i>
+واتساب
+</a>
+
+<a class="preview-btn">
+<i class="fa-brands fa-facebook-f"></i>
+فيسبوك
+</a>
+
+<a class="preview-btn">
+<i class="fa-brands fa-instagram"></i>
+انستجرام
+</a>
+
+<a class="preview-btn">
+<i class="fa-solid fa-globe"></i>
+الموقع الإلكتروني
+</a>
+
+<a class="preview-btn">
+<i class="fa-solid fa-location-dot"></i>
+الموقع
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let currentRadius=18;
+
+function setRadius(radius){
+
+currentRadius=radius;
+
+document
+.querySelectorAll('.preview-btn')
+.forEach(btn=>{
+
+btn.style.borderRadius=
+radius+'px';
+
+});
+
+}
+
+document
+.getElementById('bgColorPicker')
+.addEventListener('input',e=>{
+
+document
+.getElementById('livePreview')
+.style.background=
+e.target.value;
+
+});
+
+document
+.getElementById('textColorPicker')
+.addEventListener('input',e=>{
+
+document
+.getElementById('livePreview')
+.style.color=
+e.target.value;
+
+});
+
+document
+.getElementById('fontSelector')
+.addEventListener('change',e=>{
+
+document
+.getElementById('livePreview')
+.style.fontFamily=
+e.target.value;
+
+});
+
+document
+.getElementById('fontSizeRange')
+.addEventListener('input',e=>{
+
+document
+.querySelectorAll('.preview-btn')
+.forEach(btn=>{
+
+btn.style.fontSize=
+e.target.value+'px';
+
+});
+
+});
+
+document
+.getElementById('btnColorPicker')
+.addEventListener('input',e=>{
+
+document
+.querySelectorAll('.preview-btn')
+.forEach(btn=>{
+
+btn.style.background=
+e.target.value;
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
