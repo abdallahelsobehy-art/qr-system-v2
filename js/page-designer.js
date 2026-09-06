@@ -1,27 +1,120 @@
-const bgColor = document.getElementById("bgColor");
-const textColor = document.getElementById("textColor");
-const showLogo = document.getElementById("showLogo");
-const showDescription = document.getElementById("showDescription");
+document.addEventListener("DOMContentLoaded", () => {
 
-const preview = document.getElementById("preview");
-const previewLogo = document.getElementById("previewLogo");
-const previewTitle = document.getElementById("previewTitle");
-const previewDescription = document.getElementById("previewDescription");
+    const bgColor = document.getElementById("bgColor");
+    const textColor = document.getElementById("textColor");
+    const fontFamily = document.getElementById("fontFamily");
+    const fontSize = document.getElementById("fontSize");
 
-bgColor.addEventListener("input", () => {
-    preview.style.backgroundColor = bgColor.value;
-});
+    const btnColor = document.getElementById("btnColor");
+    const btnTextColor = document.getElementById("btnTextColor");
+    const btnRadius = document.getElementById("btnRadius");
 
-textColor.addEventListener("input", () => {
-    preview.style.color = textColor.value;
-});
+    const bgImage = document.getElementById("bgImage");
+    const btnBgImage = document.getElementById("btnBgImage");
 
-showLogo.addEventListener("change", () => {
-    previewLogo.style.display =
-        showLogo.checked ? "block" : "none";
-});
+    const previewPhone = document.getElementById("previewPhone");
+    const previewButtons = document.querySelectorAll(".preview-btn");
 
-showDescription.addEventListener("change", () => {
-    previewDescription.style.display =
-        showDescription.checked ? "block" : "none";
+    // خلفية الصفحة
+    bgColor.addEventListener("input", () => {
+        previewPhone.style.backgroundColor = bgColor.value;
+    });
+
+    // لون النص
+    textColor.addEventListener("input", () => {
+        previewPhone.style.color = textColor.value;
+    });
+
+    // نوع الخط
+    fontFamily.addEventListener("change", () => {
+        previewPhone.style.fontFamily = fontFamily.value;
+    });
+
+    // حجم الخط
+    fontSize.addEventListener("input", () => {
+
+        document.documentElement.style.setProperty(
+            "--preview-font-size",
+            fontSize.value + "px"
+        );
+
+    });
+
+    // لون الأزرار
+    btnColor.addEventListener("input", () => {
+
+        previewButtons.forEach(btn => {
+            btn.style.backgroundColor = btnColor.value;
+        });
+
+    });
+
+    // لون نص الأزرار
+    btnTextColor.addEventListener("input", () => {
+
+        previewButtons.forEach(btn => {
+            btn.style.color = btnTextColor.value;
+        });
+
+    });
+
+    // استدارة الأزرار
+    btnRadius.addEventListener("input", () => {
+
+        previewButtons.forEach(btn => {
+            btn.style.borderRadius = btnRadius.value + "px";
+        });
+
+    });
+
+    // صورة خلفية الصفحة
+    bgImage.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            previewPhone.style.backgroundImage =
+                `url(${e.target.result})`;
+
+            previewPhone.style.backgroundSize = "cover";
+            previewPhone.style.backgroundPosition = "center";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+    // صورة خلفية الأزرار
+    btnBgImage.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            previewButtons.forEach(btn => {
+
+                btn.style.backgroundImage =
+                    `url(${e.target.result})`;
+
+                btn.style.backgroundSize = "cover";
+                btn.style.backgroundPosition = "center";
+
+            });
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
 });
