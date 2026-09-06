@@ -1,12 +1,27 @@
-document.getElementById("saveBtn").addEventListener("click",()=>{
+const bgColor = document.getElementById("bgColor");
+const textColor = document.getElementById("textColor");
+const showLogo = document.getElementById("showLogo");
+const showDescription = document.getElementById("showDescription");
 
-    const settings = {
-        bgColor: document.getElementById("bgColor").value,
-        textColor: document.getElementById("textColor").value,
-        showLogo: document.getElementById("showLogo").checked,
-        showDescription: document.getElementById("showDescription").checked
-    };
+const preview = document.getElementById("preview");
+const previewLogo = document.getElementById("previewLogo");
+const previewTitle = document.getElementById("previewTitle");
+const previewDescription = document.getElementById("previewDescription");
 
-    console.log(settings);
+bgColor.addEventListener("input", () => {
+    preview.style.backgroundColor = bgColor.value;
+});
 
+textColor.addEventListener("input", () => {
+    preview.style.color = textColor.value;
+});
+
+showLogo.addEventListener("change", () => {
+    previewLogo.style.display =
+        showLogo.checked ? "block" : "none";
+});
+
+showDescription.addEventListener("change", () => {
+    previewDescription.style.display =
+        showDescription.checked ? "block" : "none";
 });
