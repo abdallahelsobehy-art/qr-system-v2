@@ -1,69 +1,45 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="designer-panel">
 
-<title>مصمم الصفحة</title>
+    <h2>🎨 تخصيص صفحة العميل</h2>
 
-<link rel="stylesheet" href="css/designer.css">
+    <div class="designer-grid">
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-</head>
-
-<body>
-
-<div class="designer-container">
-
-    <div class="designer-panel">
-
-        <h2>🎨 تخصيص صفحة العميل</h2>
-
-        <div class="form-group">
+        <div class="setting-item">
             <label>لون الخلفية</label>
-            <input type="color" id="bgColor" value="#0b7dbd">
+            <input type="color" id="pageBgColor" value="#0ea5e9">
         </div>
 
-        <div class="form-group">
+        <div class="setting-item">
             <label>لون النص</label>
             <input type="color" id="textColor" value="#ffffff">
         </div>
 
-        <div class="form-group">
+        <div class="setting-item">
             <label>خط الكتابة</label>
             <select id="fontFamily">
-
-                <option value="'Cairo',sans-serif">
-                    Cairo
-                </option>
-
-                <option value="'Tajawal',sans-serif">
-                    Tajawal
-                </option>
-
-                <option value="Arial">
-                    Arial
-                </option>
-
+                <option value="Cairo">Cairo</option>
+                <option value="Tajawal">Tajawal</option>
+                <option value="Almarai">Almarai</option>
+                <option value="Changa">Changa</option>
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="setting-item full-width">
             <label>صورة خلفية الصفحة</label>
-            <input type="file" id="bgUpload" accept="image/*">
+            <input type="file" id="bgImageInput" accept="image/*">
         </div>
 
-        <div class="form-group">
+        <div class="setting-item full-width">
             <label>خلفية الأزرار</label>
-            <input type="file" id="btnBgUpload" accept="image/*">
+            <input type="file" id="buttonBgInput" accept="image/*">
         </div>
 
-        <div class="form-group">
+        <div class="setting-item">
             <label>لون الأزرار</label>
             <input type="color" id="buttonColor" value="#ffffff">
         </div>
 
-        <div class="form-group">
+        <div class="setting-item">
             <label>لون نص الأزرار</label>
             <input type="color" id="buttonTextColor" value="#000000">
         </div>
@@ -72,43 +48,36 @@
 
     <div class="phone-preview">
 
-        <div class="phone-frame">
+        <div class="phone-header">
+            معاينة الموبايل
+        </div>
 
-            <div id="previewPage" class="preview-page">
+        <div id="previewScreen" class="preview-screen">
 
-                <div class="logo-box">
-                    <img id="previewLogo"
-                         src="https://dummyimage.com/400x250/ffffff/000000&text=LOGO">
-                </div>
+            <div class="preview-logo">
+                LOGO
+            </div>
 
-                <h1 id="previewTitle">
-                    اسم النشاط
-                </h1>
+            <h1>اسم النشاط</h1>
 
-                <p id="previewDescription">
-                    وصف النشاط التجاري يظهر هنا
-                </p>
+            <p>
+                وصف النشاط التجاري يظهر هنا
+            </p>
 
-                <div class="buttons-area">
+            <div class="preview-btn">
+                WhatsApp
+            </div>
 
-                    <a class="preview-btn">
-                        WhatsApp
-                    </a>
+            <div class="preview-btn">
+                Facebook
+            </div>
 
-                    <a class="preview-btn">
-                        Facebook
-                    </a>
+            <div class="preview-btn">
+                Instagram
+            </div>
 
-                    <a class="preview-btn">
-                        Instagram
-                    </a>
-
-                    <a class="preview-btn">
-                        Website
-                    </a>
-
-                </div>
-
+            <div class="preview-btn">
+                Website
             </div>
 
         </div>
@@ -116,8 +85,3 @@
     </div>
 
 </div>
-
-<script src="js/designer.js"></script>
-
-</body>
-</html>
