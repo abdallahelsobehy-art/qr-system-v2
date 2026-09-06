@@ -4,58 +4,112 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>مصمم صفحة العميل</title>
+<title>مصمم الصفحة</title>
 
-<link rel="stylesheet" href="css/page-designer.css">
+<link rel="stylesheet" href="css/designer.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <div class="designer-container">
 
-    <div class="controls">
+    <div class="designer-panel">
 
-        <h2>✨ تخصيص صفحة العميل</h2>
+        <h2>🎨 تخصيص صفحة العميل</h2>
 
-        <label>لون الخلفية</label>
-        <input type="color" id="bgColor" value="#ffffff">
+        <div class="form-group">
+            <label>لون الخلفية</label>
+            <input type="color" id="bgColor" value="#0b7dbd">
+        </div>
 
-        <label>لون النص</label>
-        <input type="color" id="textColor" value="#222222">
+        <div class="form-group">
+            <label>لون النص</label>
+            <input type="color" id="textColor" value="#ffffff">
+        </div>
 
-        <label>
-            <input type="checkbox" id="showLogo" checked>
-            إظهار اللوجو
-        </label>
+        <div class="form-group">
+            <label>خط الكتابة</label>
+            <select id="fontFamily">
 
-        <label>
-            <input type="checkbox" id="showDescription" checked>
-            إظهار الوصف
-        </label>
+                <option value="'Cairo',sans-serif">
+                    Cairo
+                </option>
+
+                <option value="'Tajawal',sans-serif">
+                    Tajawal
+                </option>
+
+                <option value="Arial">
+                    Arial
+                </option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>صورة خلفية الصفحة</label>
+            <input type="file" id="bgUpload" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label>خلفية الأزرار</label>
+            <input type="file" id="btnBgUpload" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label>لون الأزرار</label>
+            <input type="color" id="buttonColor" value="#ffffff">
+        </div>
+
+        <div class="form-group">
+            <label>لون نص الأزرار</label>
+            <input type="color" id="buttonTextColor" value="#000000">
+        </div>
 
     </div>
 
-    <div class="preview-area">
+    <div class="phone-preview">
 
-        <div class="phone-preview" id="preview">
+        <div class="phone-frame">
 
-            <img
-                id="previewLogo"
-                class="logo"
-                src="https://via.placeholder.com/120"
-            >
+            <div id="previewPage" class="preview-page">
 
-            <h2 id="previewTitle">
-                اسم النشاط
-            </h2>
+                <div class="logo-box">
+                    <img id="previewLogo"
+                         src="https://dummyimage.com/400x250/ffffff/000000&text=LOGO">
+                </div>
 
-            <p id="previewDescription">
-                وصف النشاط التجاري يظهر هنا
-            </p>
+                <h1 id="previewTitle">
+                    اسم النشاط
+                </h1>
 
-            <div class="btn">WhatsApp</div>
-            <div class="btn">Facebook</div>
-            <div class="btn">Instagram</div>
+                <p id="previewDescription">
+                    وصف النشاط التجاري يظهر هنا
+                </p>
+
+                <div class="buttons-area">
+
+                    <a class="preview-btn">
+                        WhatsApp
+                    </a>
+
+                    <a class="preview-btn">
+                        Facebook
+                    </a>
+
+                    <a class="preview-btn">
+                        Instagram
+                    </a>
+
+                    <a class="preview-btn">
+                        Website
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -63,7 +117,7 @@
 
 </div>
 
-<script src="js/page-designer.js"></script>
+<script src="js/designer.js"></script>
 
 </body>
 </html>
