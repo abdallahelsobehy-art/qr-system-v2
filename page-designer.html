@@ -1,56 +1,132 @@
-<div class="designer-card">
+<div class="designer-layout">
 
-    <h2 class="designer-title">
-        🎨 تخصيص صفحة العميل
-    </h2>
+    <!-- لوحة التحكم -->
+    <div class="designer-panel">
 
-    <div class="designer-grid">
+        <div class="designer-card">
+            <h3>🖼️ أدوات الخلفية العامة</h3>
 
-        <div class="setting-row">
+            <label>صورة خلفية الصفحة</label>
+            <input type="file" id="bgImageInput" accept="image/*">
+
             <label>لون الخلفية</label>
-            <input type="color" id="pageBgColor" value="#2196f3">
+            <input type="color" id="bgColorPicker" value="#0b7dbd">
         </div>
 
-        <div class="setting-row">
+        <div class="designer-card">
+            <h3>🖼️ خلفية الأزرار</h3>
+
+            <label>صورة خلفية الأزرار</label>
+            <input type="file" id="btnBgInput" accept="image/*">
+
+            <label>لون الأزرار</label>
+            <input type="color" id="btnColorPicker" value="#ffffff">
+        </div>
+
+        <div class="designer-card">
+            <h3>🔤 الألوان والخطوط</h3>
+
             <label>لون النص</label>
-            <input type="color" id="textColor" value="#ffffff">
-        </div>
+            <input type="color" id="textColorPicker" value="#ffffff">
 
-        <div class="setting-row">
-            <label>خط الكتابة</label>
-            <select id="fontFamily">
+            <label>نوع الخط</label>
+            <select id="fontSelector">
                 <option value="Cairo">Cairo</option>
                 <option value="Tajawal">Tajawal</option>
                 <option value="Almarai">Almarai</option>
                 <option value="Changa">Changa</option>
-                <option value="Amiri">Amiri</option>
             </select>
+
+            <label>حجم الخط</label>
+            <input type="range" id="fontSizeRange"
+                   min="12" max="40" value="18">
         </div>
 
-        <div class="setting-row full">
-            <label>صورة خلفية الصفحة</label>
-            <input type="file" id="bgImage" accept="image/*">
-        </div>
+        <div class="designer-card">
+            <h3>🔘 استدارة الأزرار</h3>
 
-        <div class="setting-row full">
-            <label>خلفية الأزرار</label>
-            <input type="file" id="btnBgImage" accept="image/*">
-        </div>
+            <label>شكل الأزرار</label>
 
-        <div class="setting-row">
-            <label>لون الأزرار</label>
-            <input type="color" id="btnColor" value="#ffffff">
-        </div>
+            <div class="shape-options">
 
-        <div class="setting-row">
-            <label>لون نص الأزرار</label>
-            <input type="color" id="btnTextColor" value="#000000">
+                <button type="button"
+                        onclick="setRadius(0)">
+                    مربع
+                </button>
+
+                <button type="button"
+                        onclick="setRadius(20)">
+                    نصف دائري
+                </button>
+
+                <button type="button"
+                        onclick="setRadius(50)">
+                    دائري
+                </button>
+
+                <button type="button"
+                        onclick="setRadius(100)">
+                    زجاجي
+                </button>
+
+            </div>
         </div>
 
     </div>
 
-    <div class="phone-preview">
 
-        <div class="phone-top"></div>
+    <!-- شاشة المعاينة -->
+    <div class="phone-preview-wrapper">
 
-        <div class="
+        <div class="phone-frame">
+
+            <div id="livePreview" class="preview-screen">
+
+                <div class="preview-logo">
+                    <img id="previewLogo"
+                         src="assets/default-logo.png">
+                </div>
+
+                <h1 id="previewTitle">
+                    اسم النشاط
+                </h1>
+
+                <p id="previewDesc">
+                    وصف النشاط التجاري
+                </p>
+
+                <div class="preview-links">
+
+                    <a class="preview-btn">
+                        رقم الهاتف
+                    </a>
+
+                    <a class="preview-btn">
+                        واتساب
+                    </a>
+
+                    <a class="preview-btn">
+                        فيسبوك
+                    </a>
+
+                    <a class="preview-btn">
+                        انستجرام
+                    </a>
+
+                    <a class="preview-btn">
+                        الموقع الإلكتروني
+                    </a>
+
+                    <a class="preview-btn">
+                        خريطة الموقع
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
