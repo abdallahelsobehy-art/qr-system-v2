@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>تخصيص صفحة العميل</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/page-designer.css">
+<title>مصمم صفحة العميل</title>
+
+<link rel="stylesheet" href="css/page-designer.css">
 </head>
+
 <body>
 
-<div class="container">
+<div class="designer-container">
 
-    <h1>✨ تخصيص صفحة العميل</h1>
+    <div class="controls">
 
-    <div class="card">
+        <h2>✨ تخصيص صفحة العميل</h2>
 
         <label>لون الخلفية</label>
         <input type="color" id="bgColor" value="#ffffff">
@@ -30,14 +33,37 @@
             إظهار الوصف
         </label>
 
-        <button id="saveBtn">
-            حفظ الإعدادات
-        </button>
+    </div>
+
+    <div class="preview-area">
+
+        <div class="phone-preview" id="preview">
+
+            <img
+                id="previewLogo"
+                class="logo"
+                src="https://via.placeholder.com/120"
+            >
+
+            <h2 id="previewTitle">
+                اسم النشاط
+            </h2>
+
+            <p id="previewDescription">
+                وصف النشاط التجاري يظهر هنا
+            </p>
+
+            <div class="btn">WhatsApp</div>
+            <div class="btn">Facebook</div>
+            <div class="btn">Instagram</div>
+
+        </div>
 
     </div>
 
 </div>
 
 <script src="js/page-designer.js"></script>
+
 </body>
 </html>
