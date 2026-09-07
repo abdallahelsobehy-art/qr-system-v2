@@ -9,33 +9,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&family=Almarai:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Cairo,sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Tahoma,sans-serif;}
 body{background:#f0f3f8;padding:20px;color:#333;}
 
 /* الهيدر العلوي */
-.header-top{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:15px 25px;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,.05);margin-bottom:20px;}
+.header-top{background:#fff;padding:15px 25px;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,.05);margin-bottom:20px;}
 .header-top h2{font-size:20px;color:#111;display:flex;align-items:center;gap:10px;}
 .header-top p{font-size:13px;color:#666;margin-top:4px;}
 
-/* التخطيط العام: شبكة بين القوائم والمعاينة */
+/* التخطيط العام: القوائم يمين/يسار والمعاينة ثابتة بجانبها */
 .designer-layout{display:grid;grid-template-columns:1fr 420px;gap:25px;align-items:start;}
-
 .designer-panel{display:flex;flex-direction:column;gap:20px;}
 
 .designer-card{background:#fff;padding:20px;border-radius:18px;box-shadow:0 5px 15px rgba(0,0,0,.05);}
 .designer-card h3{font-size:15px;margin-bottom:15px;color:#222;display:flex;align-items:center;gap:8px;}
-
 .designer-card label{display:block;margin-top:12px;margin-bottom:6px;font-size:13px;font-weight:bold;color:#444;}
-.designer-card input[type="text"], .designer-card select{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font-size:13px;}
-
-.file-upload-box{border:2px dashed #b0c4de;padding:15px;text-align:center;border-radius:12px;background:#fafbfc;cursor:pointer;margin-top:5px;}
-.file-upload-box span{font-size:12px;color:#666;display:block;margin-top:5px;}
+.designer-card select{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font-size:13px;}
 
 .color-picker-row{display:flex;align-items:center;gap:10px;border:1px solid #ddd;padding:8px 12px;border-radius:10px;margin-top:5px;}
 .color-picker-row input[type="color"]{border:none;width:30px;height:30px;cursor:pointer;background:none;}
 .color-picker-row span{font-size:13px;font-weight:bold;}
 
-/* أزرار الاستدارة الأربعة */
+/* أزرار استدارة الأشكال */
 .shape-options{display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;margin-top:10px;}
 .shape-btn{border:1px solid #ddd;padding:10px 5px;background:#fff;cursor:pointer;border-radius:10px;font-weight:bold;font-size:12px;text-align:center;transition:.2s;}
 .shape-btn.active{border-color:#0b7dbd;background:#eef7fc;color:#0b7dbd;}
@@ -44,20 +39,84 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 .range-box input[type="range"]{flex:1;}
 .range-box input[type="number"]{width:60px;text-align:center;padding:6px;border:1px solid #ddd;border-radius:8px;}
 
-/* حاوية معاينة الموبايل (Sticky على الشاشات الكبيرة وفوق على الموبايل) */
+/* حاوية معاينة الموبايل (مطابقة تماماً لصفحة العميل) */
 .preview-container{position:sticky;top:20px;}
 .phone-frame{width:100%;max-width:400px;height:780px;background:#1a1a1a;padding:14px;border-radius:45px;box-shadow:0 20px 40px rgba(0,0,0,.2);margin:0 auto;}
-.preview-screen{height:100%;border-radius:35px;overflow-y:auto;padding:25px 20px;background:#0b7dbd;color:white;text-align:center;position:relative;}
+.preview-screen{
+    height:100%;
+    border-radius:35px;
+    overflow-y:auto;
+    padding:20px;
+    background:url("assets/background.jpg") center center/cover no-repeat;
+    background-attachment:local;
+    color:white;
+    text-align:center;
+    position:relative;
+}
 
-.preview-logo img{width:100px;height:100px;object-fit:cover;border-radius:50%;border:3px solid rgba(255,255,255,.5);margin:0 auto 10px;}
-#previewTitle{font-size:22px;font-weight:bold;margin-bottom:5px;}
-#previewDesc{font-size:12px;opacity:.9;margin-bottom:20px;line-height:1.4;}
+/* شاشة معاينة اللوجو */
+.preview-logo-container{
+    width: 100%;
+    height: 180px;
+    border-radius: 18px;
+    margin: 15px auto;
+    overflow: hidden;
+    position: relative;
+    background: url("assets/card-bg.jpg") center center/cover;
+    box-shadow: 0 6px 15px rgba(0,0,0,.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+.preview-logo-container::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,.75);
+    z-index: 1;
+}
+.preview-logo-container img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    display: block;
+}
+
+#prevName{font-size:28px;margin-bottom:5px;text-shadow:0 2px 8px rgba(0,0,0,.5);font-weight:bold;}
+#prevDesc{font-size:16px;margin-bottom:20px;text-shadow:0 2px 8px rgba(0,0,0,.5);opacity:.9;}
 
 .preview-links{display:flex;flex-direction:column;gap:12px;}
-.preview-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 15px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);font-size:15px;font-weight:bold;color:white;text-decoration:none;transition:.2s;}
-.preview-btn i{font-size:18px;}
+.preview-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:15px 20px;
+    border-radius:18px;
+    text-decoration:none;
+    color:#111;
+    font-size:18px;
+    font-weight:bold;
+    position:relative;
+    overflow:hidden;
+    background:url("assets/card-bg.jpg");
+    background-size:cover;
+    background-position:center;
+    box-shadow:0 6px 15px rgba(0,0,0,.25);
+}
+.preview-btn::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,.75);
+}
+.preview-btn span{position:relative;z-index:2;}
+.preview-btn img{position:absolute;right:20px;z-index:2;width:32px;height:32px;object-fit:contain;}
 
-/* التجاوب مع الموبايل */
+.preview-footer{margin-top:20px;font-size:14px;font-weight:bold;text-shadow:0 2px 5px rgba(0,0,0,.5);}
+
 @media(max-width:992px){
 .designer-layout{grid-template-columns:1fr;}
 .preview-container{position:relative;top:0;margin-bottom:20px;}
@@ -67,88 +126,51 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 <body>
 
 <div class="header-top">
-<div>
 <h2><i class="fa-solid fa-paintbrush" style="color:#0b7dbd;"></i> تخصيص صفحة العميل</h2>
-<p>قم بتعديل التصميم ومشاهدة التغييرات مباشرة على المعاينة</p>
-</div>
+<p>التعديلات تظهر فوراً على شاشة المعاينة المطابقة لصفحة العميل الحقيقية</p>
 </div>
 
 <div class="designer-layout">
 
-<!-- القوائم وأدوات التحكم -->
+<!-- لوحة التحكم والقوائم -->
 <div class="designer-panel">
 
 <div class="designer-card">
-<h3><i class="fa-solid fa-image" style="color:#0b7dbd;"></i> أدوات الخلفية العامة</h3>
-<label>صورة خلفية الصفحة</label>
-<div class="file-upload-box">
-<i class="fa-solid fa-cloud-arrow-up" style="font-size:20px;color:#0b7dbd;"></i>
-<span>اختر صورة من جهازك (JPG, PNG)</span>
-<input type="file" id="bgImageInput" style="display:none;">
-</div>
-<label>لون الخلفية</label>
-<div class="color-picker-row">
-<input type="color" id="bgColorPicker" value="#0b7dbd">
-<span id="bgColorVal">#0b7dbd</span>
-</div>
-</div>
-
-<div class="designer-card">
-<h3><i class="fa-solid fa-square" style="color:#0b7dbd;"></i> خلفية الأزرار</h3>
-<label>صورة خلفية الأزرار</label>
-<div class="file-upload-box">
-<i class="fa-solid fa-cloud-arrow-up" style="font-size:20px;color:#0b7dbd;"></i>
-<span>اختر صورة من جهازك (JPG, PNG)</span>
-<input type="file" id="btnBgInput" style="display:none;">
-</div>
-<label>لون الأزرار</label>
-<div class="color-picker-row">
-<input type="color" id="btnColorPicker" value="#ffffff">
-<span id="btnColorVal">#ffffff</span>
-</div>
-</div>
-
-<div class="designer-card">
-<h3><i class="fa-solid fa-font" style="color:#0b7dbd;"></i> الألوان والخطوط</h3>
-<label>لون النص</label>
-<div class="color-picker-row">
-<input type="color" id="textColorPicker" value="#ffffff">
-<span id="textColorVal">#ffffff</span>
-</div>
+<h3><i class="fa-solid fa-font" style="color:#0b7dbd;"></i> الخطوط والنصوص</h3>
 <label>نوع الخط</label>
 <select id="fontSelector">
+<option value="Tahoma">Tahoma</option>
 <option value="Cairo">Cairo</option>
 <option value="Tajawal">Tajawal</option>
 <option value="Almarai">Almarai</option>
 <option value="Changa">Changa</option>
 </select>
-<label>حجم الخط</label>
+<label>حجم الخط الأزرار</label>
 <div class="range-box">
-<input type="range" id="fontSizeRange" min="12" max="24" value="15">
-<input type="number" id="fontSizeNum" value="15" min="12" max="24"> px
+<input type="range" id="fontSizeRange" min="14" max="24" value="18">
+<input type="number" id="fontSizeNum" value="18" min="14" max="24"> px
 </div>
 </div>
 
 <div class="designer-card">
-<h3><i class="fa-solid fa-shapes" style="color:#0b7dbd;"></i> استدارة الأزرار</h3>
-<label>شكل الأزرار</label>
+<h3><i class="fa-solid fa-shapes" style="color:#0b7dbd;"></i> استدارة الأزرار والبرواز</h3>
 <div class="shape-options">
-<button class="shape-btn" onclick="setShape(0, this)">زجاجي</button>
-<button class="shape-btn active" onclick="setShape(15, this)">دائري</button>
-<button class="shape-btn" onclick="setShape(25, this)">نصف دائري</button>
-<button class="shape-btn" onclick="setShape(50, this)">كبسولة</button>
+<button class="shape-btn" onclick="setShape(0, this)">مربع</button>
+<button class="shape-btn" onclick="setShape(10, this)">ناعمة</button>
+<button class="shape-btn active" onclick="setShape(18, this)">افتراضي</button>
+<button class="shape-btn" onclick="setShape(30, this)">دائري</button>
 </div>
-<label style="margin-top:15px;">قيمة الاستدارة</label>
+<label style="margin-top:15px;">قيمة الاستدارة الدقيقة</label>
 <div class="range-box">
-<input type="range" id="radiusRange" min="0" max="50" value="15">
-<input type="number" id="radiusNum" value="15" min="0" max="50"> px
+<input type="range" id="radiusRange" min="0" max="40" value="18">
+<input type="number" id="radiusNum" value="18" min="0" max="40"> px
 </div>
 </div>
 
 <div class="designer-card">
 <h3><i class="fa-solid fa-gear" style="color:#0b7dbd;"></i> إعدادات إضافية</h3>
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
-<label style="margin:0;">إظهار الشعار</label>
+<label style="margin:0;">إظهار اللوجو</label>
 <input type="checkbox" id="toggleLogo" checked style="width:20px;height:20px;cursor:pointer;">
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
@@ -159,26 +181,28 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 
 </div>
 
-<!-- معاينة الموبايل (Sticky) -->
+<!-- معاينة الموبايل الحية -->
 <div class="preview-container">
 <div class="phone-frame">
-<div id="livePreview" class="preview-screen">
+<div id="livePreviewScreen" class="preview-screen">
 
-<div class="preview-logo" id="logoContainer">
-<img id="previewLogo" src="https://via.placeholder.com/120">
+<!-- برواز اللوجو -->
+<div id="prevLogoWrapper" class="preview-logo-container">
+    <img id="prevLogoImg" src="assets/card-bg.jpg">
 </div>
 
-<div id="previewTitle">مكة للإعلان</div>
-<div id="previewDesc">سرعة في التنفيذ • دقة في التفاصيل • ثقة في النتيجة</div>
+<div id="prevName">مكة - Maka</div>
+<div id="prevDesc">سرعة في التنفيذ • دقة في التفاصيل • ثقة في النتيجة</div>
 
+<!-- الأزرار التجريبية المعاينة -->
 <div class="preview-links">
-<a class="preview-btn" style="border-radius:15px;"><i class="fa-solid fa-phone"></i> رقم الهاتف</a>
-<a class="preview-btn" style="border-radius:15px;"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-<a class="preview-btn" style="border-radius:15px;"><i class="fa-brands fa-facebook-f"></i> فيسبوك</a>
-<a class="preview-btn" style="border-radius:15px;"><i class="fa-brands fa-instagram"></i> إنستجرام</a>
-<a class="preview-btn" style="border-radius:15px;"><i class="fa-solid fa-globe"></i> موقعنا الإلكتروني</a>
-<a class="preview-btn" style="border-radius:15px;"><i class="fa-solid fa-location-dot"></i> خريطة الموقع</a>
+<a class="preview-btn"><img src="assets/call.png"><span>Call me</span></a>
+<a class="preview-btn"><img src="assets/facebook.png"><span>Facebook</span></a>
+<a class="preview-btn"><img src="assets/review.png"><span>Review</span></a>
+<a class="preview-btn"><img src="assets/cash.png"><span>Vodafone Cash</span></a>
 </div>
+
+<div class="preview-footer">جميع الحقوق محفوظة ✓</div>
 
 </div>
 </div>
@@ -187,35 +211,17 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 </div>
 
 <script>
-// تحديث لون خلفية الصفحة
-const bgColorPicker = document.getElementById('bgColorPicker');
-bgColorPicker.addEventListener('input', (e) => {
-    document.getElementById('livePreview').style.background = e.target.value;
-    document.getElementById('bgColorVal').innerText = e.target.value;
-});
+const screenEl = document.getElementById('livePreviewScreen');
+const logoWrapper = document.getElementById('prevLogoWrapper');
+const descEl = document.getElementById('prevDesc');
 
-// تحديث لون الأزرار
-const btnColorPicker = document.getElementById('btnColorPicker');
-btnColorPicker.addEventListener('input', (e) => {
-    document.querySelectorAll('.preview-btn').forEach(btn => {
-        btn.style.background = e.target.value;
-    });
-    document.getElementById('btnColorVal').innerText = e.target.value;
-});
-
-// تحديث لون النص
-const textColorPicker = document.getElementById('textColorPicker');
-textColorPicker.addEventListener('input', (e) => {
-    document.getElementById('livePreview').style.color = e.target.value;
-    document.getElementById('textColorVal').innerText = e.target.value;
-});
-
-// نوع الخط
+// تغيير الخط
 document.getElementById('fontSelector').addEventListener('change', (e) => {
-    document.getElementById('livePreview').style.fontFamily = e.target.value;
+    screenEl.style.fontFamily = e.target.value;
+    document.querySelectorAll('.preview-btn').forEach(btn => btn.style.fontFamily = e.target.value);
 });
 
-// حجم الخط
+// حجم خط الأزرار
 const fontSizeRange = document.getElementById('fontSizeRange');
 const fontSizeNum = document.getElementById('fontSizeNum');
 function updateFontSize(val) {
@@ -228,13 +234,14 @@ function updateFontSize(val) {
 fontSizeRange.addEventListener('input', (e) => updateFontSize(e.target.value));
 fontSizeNum.addEventListener('input', (e) => updateFontSize(e.target.value));
 
-// استدارة الأزرار
+// استدارة الأزرار والبرواز
 const radiusRange = document.getElementById('radiusRange');
 const radiusNum = document.getElementById('radiusNum');
 
 function applyRadius(val) {
     radiusRange.value = val;
     radiusNum.value = val;
+    logoWrapper.style.borderRadius = val + 'px';
     document.querySelectorAll('.preview-btn').forEach(btn => {
         btn.style.borderRadius = val + 'px';
     });
@@ -249,13 +256,14 @@ function setShape(val, btnElement) {
 radiusRange.addEventListener('input', (e) => applyRadius(e.target.value));
 radiusNum.addEventListener('input', (e) => applyRadius(e.target.value));
 
-// إظهار وإخفاء الشعار والوصف
+// إظهار وإخفاء اللوجو
 document.getElementById('toggleLogo').addEventListener('change', (e) => {
-    document.getElementById('logoContainer').style.display = e.target.checked ? 'block' : 'none';
+    logoWrapper.style.display = e.target.checked ? 'flex' : 'none';
 });
 
+// إظهار وإخفاء الوصف
 document.getElementById('toggleDesc').addEventListener('change', (e) => {
-    document.getElementById('previewDesc').style.display = e.target.checked ? 'block' : 'none';
+    descEl.style.display = e.target.checked ? 'block' : 'none';
 });
 </script>
 
