@@ -10,39 +10,39 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Tahoma,sans-serif;}
-body{background:#f0f3f8;padding:20px;color:#333;}
+body{background:#f0f3f8;padding:15px;color:#333;}
 
 /* الهيدر العلوي */
-.header-top{background:#fff;padding:15px 25px;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,.05);margin-bottom:20px;}
-.header-top h2{font-size:20px;color:#111;display:flex;align-items:center;gap:10px;}
-.header-top p{font-size:13px;color:#666;margin-top:4px;}
+.header-top{background:#fff;padding:12px 20px;border-radius:14px;box-shadow:0 4px 15px rgba(0,0,0,.05);margin-bottom:15px;}
+.header-top h2{font-size:18px;color:#111;display:flex;align-items:center;gap:8px;}
+.header-top p{font-size:12px;color:#666;margin-top:2px;}
 
-/* التخطيط العام: القوائم تأخذ المساحة، والمعاينة عائمة وصغيرة في الجانب تماماً كالصورة */
-.designer-layout{display:grid;grid-template-columns:1fr 290px;gap:20px;align-items:start;}
-.designer-panel{display:flex;flex-direction:column;gap:20px;}
+/* التخطيط العام: الشبكة المضبوطة تماماً مثل صورتك */
+.designer-layout{display:grid;grid-template-columns:1fr 260px;gap:15px;align-items:start;}
+.designer-panel{display:flex;flex-direction:column;gap:15px;}
 
-.designer-card{background:#fff;padding:20px;border-radius:18px;box-shadow:0 5px 15px rgba(0,0,0,.05);}
-.designer-card h3{font-size:15px;margin-bottom:15px;color:#222;display:flex;align-items:center;gap:8px;}
-.designer-card label{display:block;margin-top:12px;margin-bottom:6px;font-size:13px;font-weight:bold;color:#444;}
-.designer-card select{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font-size:13px;}
+.designer-card{background:#fff;padding:15px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);}
+.designer-card h3{font-size:14px;margin-bottom:12px;color:#222;display:flex;align-items:center;gap:8px;}
+.designer-card label{display:block;margin-top:10px;margin-bottom:5px;font-size:12px;font-weight:bold;color:#444;}
+.designer-card select{width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:12px;}
 
-/* أزرار استدارة الأشكال المطابقة تماماً لصورتك */
-.shape-options{display:grid;grid-template-columns:repeat(4, 1fr);gap:6px;margin-top:10px;}
-.shape-btn{border:1px solid #ddd;padding:8px 4px;background:#fff;cursor:pointer;border-radius:10px;font-weight:bold;font-size:11px;text-align:center;transition:.2s;}
+/* أزرار الاستدارة تماماً كالصورة */
+.shape-options{display:grid;grid-template-columns:repeat(4, 1fr);gap:5px;margin-top:8px;}
+.shape-btn{border:1px solid #ddd;padding:6px 2px;background:#fff;cursor:pointer;border-radius:8px;font-weight:bold;font-size:11px;text-align:center;transition:.2s;}
 .shape-btn.active{border-color:#0b7dbd;background:#eef7fc;color:#0b7dbd;}
 
-.range-box{display:flex;align-items:center;gap:15px;margin-top:8px;}
+.range-box{display:flex;align-items:center;gap:10px;margin-top:6px;}
 .range-box input[type="range"]{flex:1;}
-.range-box input[type="number"]{width:60px;text-align:center;padding:6px;border:1px solid #ddd;border-radius:8px;}
+.range-box input[type="number"]{width:55px;text-align:center;padding:5px;border:1px solid #ddd;border-radius:6px;font-size:12px;}
 
-/* حاوية معاينة الموبايل المصغرة والعائمة مثل الصورة */
-.preview-container{position:sticky;top:20px;}
-.phone-frame{width:100%;max-width:280px;height:560px;background:#1a1a1a;padding:8px;border-radius:30px;box-shadow:0 15px 35px rgba(0,0,0,.25);margin:0 auto;}
+/* حاوية معاينة الموبايل المصغرة والعائمة تماماً مثل صورتك */
+.preview-container{position:sticky;top:15px;}
+.phone-frame{width:100%;max-width:250px;height:520px;background:#1a1a1a;padding:6px;border-radius:26px;box-shadow:0 10px 30px rgba(0,0,0,.25);margin:0 auto;}
 .preview-screen{
     height:100%;
-    border-radius:24px;
+    border-radius:20px;
     overflow-y:auto;
-    padding:12px;
+    padding:10px;
     background:url("assets/background.jpg") center center/cover no-repeat;
     background-attachment:local;
     color:white;
@@ -53,17 +53,17 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 /* شاشة معاينة اللوجو المصغرة */
 .preview-logo-container{
     width: 100%;
-    height: 110px;
-    border-radius: 14px;
-    margin: 8px auto;
+    height: 95px;
+    border-radius: 12px;
+    margin: 6px auto;
     overflow: hidden;
     position: relative;
     background: url("assets/card-bg.jpg") center center/cover;
-    box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 6px;
 }
 .preview-logo-container::before{
     content: "";
@@ -81,26 +81,26 @@ body{background:#f0f3f8;padding:20px;color:#333;}
     display: block;
 }
 
-#prevName{font-size:18px;margin-bottom:3px;text-shadow:0 2px 5px rgba(0,0,0,.5);font-weight:bold;}
-#prevDesc{font-size:11px;margin-bottom:12px;text-shadow:0 2px 5px rgba(0,0,0,.5);opacity:.9;}
+#prevName{font-size:16px;margin-bottom:2px;text-shadow:0 2px 4px rgba(0,0,0,.5);font-weight:bold;}
+#prevDesc{font-size:10px;margin-bottom:10px;text-shadow:0 2px 4px rgba(0,0,0,.5);opacity:.9;}
 
-.preview-links{display:flex;flex-direction:column;gap:8px;}
+.preview-links{display:flex;flex-direction:column;gap:6px;}
 .preview-btn{
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:10px 12px;
+    padding:8px 10px;
     border-radius:18px;
     text-decoration:none;
     color:#111;
-    font-size:13px;
+    font-size:12px;
     font-weight:bold;
     position:relative;
     overflow:hidden;
     background:url("assets/card-bg.jpg");
     background-size:cover;
     background-position:center;
-    box-shadow:0 4px 10px rgba(0,0,0,.25);
+    box-shadow:0 3px 8px rgba(0,0,0,.25);
 }
 .preview-btn::before{
     content:"";
@@ -109,13 +109,13 @@ body{background:#f0f3f8;padding:20px;color:#333;}
     background:rgba(255,255,255,.75);
 }
 .preview-btn span{position:relative;z-index:2;}
-.preview-btn img{position:absolute;right:12px;z-index:2;width:22px;height:22px;object-fit:contain;}
+.preview-btn img{position:absolute;right:10px;z-index:2;width:18px;height:18px;object-fit:contain;}
 
-.preview-footer{margin-top:12px;font-size:11px;font-weight:bold;text-shadow:0 2px 4px rgba(0,0,0,.5);}
+.preview-footer{margin-top:10px;font-size:10px;font-weight:bold;text-shadow:0 2px 3px rgba(0,0,0,.5);}
 
 @media(max-width:992px){
 .designer-layout{grid-template-columns:1fr;}
-.preview-container{position:relative;top:0;margin-bottom:20px;}
+.preview-container{position:relative;top:0;margin-bottom:15px;}
 }
 </style>
 </head>
@@ -123,7 +123,7 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 
 <div class="header-top">
 <h2><i class="fa-solid fa-paintbrush" style="color:#0b7dbd;"></i> تخصيص صفحة العميل</h2>
-<p>شاشة المعاينة مصغرة وعائمة في الجانب تماماً كما طلبت</p>
+<p>المعاينة مصغرة وثابتة بالجانب تماماً كصورتك</p>
 </div>
 
 <div class="designer-layout">
@@ -143,8 +143,8 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 </select>
 <label>حجم الخط الأزرار</label>
 <div class="range-box">
-<input type="range" id="fontSizeRange" min="11" max="20" value="13">
-<input type="number" id="fontSizeNum" value="13" min="11" max="20"> px
+<input type="range" id="fontSizeRange" min="10" max="18" value="12">
+<input type="number" id="fontSizeNum" value="12" min="10" max="18"> px
 </div>
 </div>
 
@@ -156,7 +156,7 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 <button class="shape-btn active" onclick="setShape(18, this)">افتراضي</button>
 <button class="shape-btn" onclick="setShape(30, this)">دائري</button>
 </div>
-<label style="margin-top:15px;">قيمة الاستدارة الدقيقة</label>
+<label style="margin-top:12px;">قيمة الاستدارة الدقيقة</label>
 <div class="range-box">
 <input type="range" id="radiusRange" min="0" max="40" value="18">
 <input type="number" id="radiusNum" value="18" min="0" max="40"> px
@@ -165,13 +165,13 @@ body{background:#f0f3f8;padding:20px;color:#333;}
 
 <div class="designer-card">
 <h3><i class="fa-solid fa-gear" style="color:#0b7dbd;"></i> إعدادات إضافية</h3>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
 <label style="margin:0;">إظهار اللوجو</label>
-<input type="checkbox" id="toggleLogo" checked style="width:20px;height:20px;cursor:pointer;">
+<input type="checkbox" id="toggleLogo" checked style="width:18px;height:18px;cursor:pointer;">
 </div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
 <label style="margin:0;">إظهار الوصف</label>
-<input type="checkbox" id="toggleDesc" checked style="width:20px;height:20px;cursor:pointer;">
+<input type="checkbox" id="toggleDesc" checked style="width:18px;height:18px;cursor:pointer;">
 </div>
 </div>
 
