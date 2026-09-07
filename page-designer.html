@@ -17,7 +17,7 @@ body{background:#f0f3f8;padding:15px;color:#333;}
 .header-top h2{font-size:18px;color:#111;display:flex;align-items:center;gap:8px;}
 .header-top p{font-size:12px;color:#666;margin-top:2px;}
 
-/* التخطيط والتنسيق للمعاينة العائمة */
+/* التخطيط والتنسيق للمعاينة الثابتة والقوائم المتحركة */
 .designer-layout{
     position:relative;
     display:block;
@@ -30,12 +30,13 @@ body{background:#f0f3f8;padding:15px;color:#333;}
 }
 
 .preview-container{
-    position:fixed;
-    right:10px;
-    top:180px;
-    z-index:99999;
-    transform:scale(.9);
-    transform-origin:top right;
+    position: sticky;
+    top: 20px;
+    float: left;
+    margin-left: 20px;
+    z-index: 99999;
+    transform: scale(.9);
+    transform-origin: top right;
 }
 
 .phone-frame{
@@ -52,7 +53,7 @@ body{background:#f0f3f8;padding:15px;color:#333;}
 .designer-card label{display:block;margin-top:10px;margin-bottom:5px;font-size:12px;font-weight:bold;color:#444;}
 .designer-card select{width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:12px;}
 
-/* أزرار الاستدارة تماماً كالصورة */
+/* أزرار الاستدارة */
 .shape-options{display:grid;grid-template-columns:repeat(4, 1fr);gap:5px;margin-top:8px;}
 .shape-btn{border:1px solid #ddd;padding:6px 2px;background:#fff;cursor:pointer;border-radius:8px;font-weight:bold;font-size:11px;text-align:center;transition:.2s;}
 .shape-btn.active{border-color:#0b7dbd;background:#eef7fc;color:#0b7dbd;}
@@ -137,23 +138,17 @@ body{background:#f0f3f8;padding:15px;color:#333;}
 .preview-footer{margin-top:6px;font-size:8px;font-weight:bold;text-shadow:0 2px 3px rgba(0,0,0,.5);}
 
 @media(max-width:992px){
-
-.preview-container{
-    position:fixed !important;
-    right:10px !important;
-    top:180px !important;
-    z-index:99999 !important;
-}
-
 .designer-panel{
     padding-right:0;
 }
-
-.phone-frame{
-    width:180px;
-    height:360px;
+.preview-container{
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+    float: none;
+    margin: 0 auto 15px auto;
+    width: fit-content;
 }
-
 }
 </style>
 </head>
@@ -166,7 +161,7 @@ body{background:#f0f3f8;padding:15px;color:#333;}
 
 <div class="designer-layout">
 
-<!-- معاينة الموبايل المصغرة والعائمة في الجانب -->
+<!-- معاينة الموبايل المصغرة والثابتة في الجانب -->
 <div class="preview-container">
 <div class="phone-frame">
 <div id="livePreviewScreen" class="preview-screen">
@@ -193,7 +188,7 @@ body{background:#f0f3f8;padding:15px;color:#333;}
 </div>
 </div>
 
-<!-- لوحة التحكم والقوائم -->
+<!-- لوحة التحكم والقوائم المتحركة -->
 <div class="designer-panel">
 
 <div class="designer-card">
