@@ -37,30 +37,32 @@ body{
 }
 
 /* شاشة المعاينة */
-
 .preview-container{
     position:sticky;
     top:15px;
-    width:200px;
+    width:180px;
     flex-shrink:0;
-    z-index:999;
 }
 
 .phone-frame{
     width:180px;
     height:360px;
     background:#111;
-    padding:4px;
     border-radius:25px;
     overflow:hidden;
     margin:auto;
+    position:relative;
 }
 
 #previewFrame{
+    position:absolute;
+    top:0;
+    left:0;
+
     width:375px;
     height:812px;
+
     border:none;
-    border-radius:20px;
     background:#fff;
 
     transform:scale(0.443);
