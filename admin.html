@@ -906,7 +906,7 @@
         msgEl.textContent = message;
         buttonsEl.innerHTML = `
             <button class="custom-modal-btn btn-modal-cancel" id="modalCancelBtn">إلغاء</button>
-            <button class="custom-modal-btn btn-modal-ok" style="background-color: #c53030;" id="modalConfirmBtn">تــــأڪيد</button>
+            <button class="custom-modal-btn btn-modal-ok" style="background-color: #c53030;" id="modalConfirmBtn">تــــأكـيد</button>
         `;
         modal.style.display = "flex";
 
@@ -1324,61 +1324,95 @@ db.ref("customers/" + code).set(customerData)
             height: 240,
             type: "svg",
             data: targetURL,
-            dotsOptions: { color: dotColor, type: dotType },
-            backgroundOptions: { color: bgColor },
-            cornersSquareOptions: { type: cornerType, color: cornerColor },
-            cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
-            imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
+            dotsOptions: {
+                color: dotColor,
+                type: dotType
+            },
+            backgroundOptions: {
+                color: bgColor,
+            },
+            cornersSquareOptions: {
+                color: cornerColor,
+                type: cornerType
+            },
+            cornersDotOptions: {
+                color: cornerDotColor,
+                type: cornerDotType
+            }
         };
 
         if (embedLogo === "yes" && finalLogo) {
             qrConfig.image = finalLogo;
+            qrConfig.imageOptions = {
+                crossOrigin: "anonymous",
+                margin: 5,
+                imageSize: 0.4
+            };
         }
 
         qrCodeInstance = new QRCodeStyling(qrConfig);
         qrCodeInstance.append(qrContainer);
+
+        // تحديث شاشة المعاينة داخل التبويب الرابع
+        const designerFrame = document.getElementById("pageDesignerFrame");
+
+        if (designerFrame) {
+
+            const customerId = SafeGetValue("code");
+
+            try {
+
+                if (
+                    designerFrame.contentWindow &&
+                    typeof designerFrame.contentWindow.updatePagePreview === "function"
+                ) {
+
+                    designerFrame.contentWindow.updatePagePreview(customerId);
+
+                }
+
+            } catch(e){
+                console.log("Preview Frame Not Ready");
+            }
+        }
     }
 
     function downloadQR() {
-        const code = SafeGetValue("code") || "QR_Code";
-        const selectedFormat = SafeGetValue("downloadFormat") || "png";
-        const downloadSize = parseInt(SafeGetValue("downloadSize") || "2000", 10);
-        
-        const dotColor = SafeGetValue("qrDotColor") || "#000000";
-        const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
-        const dotType = SafeGetValue("qrDotType") || "square";
-        
-        const cornerType = SafeGetValue("qrCornerType") || "square";
-        const cornerColor = SafeGetValue("qrCornerColor") || dotColor;
-        
-        const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
-        const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
-
-        const embedLogo = SafeGetValue("qrEmbedLogo");
-        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
-        const currentLogo = (embedLogo === "yes" && finalLogo) ? finalLogo : "";
-
-        const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
-
-        const downloadConfig = {
-            width: downloadSize,
-            height: downloadSize,
-            type: selectedFormat,
-            data: targetURL,
-            dotsOptions: { color: dotColor, type: dotType },
-            backgroundOptions: { color: bgColor },
-            cornersSquareOptions: { type: cornerType, color: cornerColor },
-            cornersDotOptions: { type: cornerDotType, color: cornerDotColor },
-            imageOptions: { crossOrigin: "anonymous", margin: 4, imageSize: 0.26 }
-        };
-
-        if (currentLogo) {
-            downloadConfig.image = currentLogo;
+        if (!qrCodeInstance) {
+            showCustomAlert("يرجى توليد الـ QR أولاً");
+            return;
         }
 
-        const tempQR = new QRCodeStyling(downloadConfig);
-        tempQR.download({ name: "QR_" + code.replace(/[:\/]/g, '_'), extension: selectedFormat });
+        const format = document.getElementById("downloadFormat").value;
+        const size = parseInt(document.getElementById("downloadSize").value);
+        const code = SafeGetValue("code") || "qrcode";
+
+        qrCodeInstance.download({
+            name: code,
+            extension: format
+        });
     }
+
+    window.addEventListener("load", function(){
+
+        const designerFrame = document.getElementById("pageDesignerFrame");
+
+        if(designerFrame){
+
+            designerFrame.onload = function(){
+
+                const customerId = SafeGetValue("code");
+
+                if(
+                    this.contentWindow &&
+                    typeof this.contentWindow.updatePagePreview === "function"
+                ){
+                    this.contentWindow.updatePagePreview(customerId);
+                }
+            };
+        }
+
+    });
 </script>
 </body>
-    </html>
+                                                                        </html>
