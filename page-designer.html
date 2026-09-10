@@ -380,6 +380,10 @@ function updatePagePreview(customerCode){
 
     iframe.src =
     `qr.html?id=${encodeURIComponent(customerCode)}
+    &font=${font}
+    &cardStyle=${cardStyle}
+    &iconColor=${iconColor}
+    &iconsLayout=${iconsLayout}
     &bgImage=${bgImage}
     &cardImage=${cardImage}
     &coverImage=${coverImage}
