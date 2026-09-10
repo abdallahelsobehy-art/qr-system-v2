@@ -97,7 +97,7 @@ body{
     font-size: 13px;
 }
 
-input[type="text"], input[type="color"], select {
+input[type="text"], input[type="color"], select, input[type="file"] {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #dcdcdc;
@@ -218,29 +218,44 @@ input[type="text"]:focus, select:focus {
     <!-- أدوات التخصيص -->
     <div class="designer-panel">
 
-        <!-- 1. تخصيص الألوان الأساسية والخلفية -->
+        <!-- 1. الخلفيات -->
         <div class="designer-card">
-            <h3><i class="fa-solid fa-palette"></i> ألوان الهوية والخلفية</h3>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>لون الخلفية العامة</label>
-                    <input type="color" id="designBgColor" value="#f8fafc" oninput="triggerLiveUpdate()">
-                </div>
-                <div class="form-group">
-                    <label>اللون الرئيسي (Primary)</label>
-                    <input type="color" id="designPrimaryColor" value="#111111" oninput="triggerLiveUpdate()">
-                </div>
+
+            <h3>
+                <i class="fa-solid fa-image"></i>
+                الخلفيات
+            </h3>
+
+            <div class="form-group">
+                <label>خلفية الصفحة</label>
+
+                <input
+                    type="file"
+                    id="backgroundImage"
+                    accept="image/*"
+                    onchange="previewBackgroundImage(this)">
             </div>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>لون النصوص</label>
-                    <input type="color" id="designTextColor" value="#2d3748" oninput="triggerLiveUpdate()">
-                </div>
-                <div class="form-group">
-                    <label>لون كروت التواصل</label>
-                    <input type="color" id="designCardBgColor" value="#ffffff" oninput="triggerLiveUpdate()">
-                </div>
+
+            <div class="form-group">
+                <label>خلفية الأزرار</label>
+
+                <input
+                    type="file"
+                    id="buttonBackground"
+                    accept="image/*"
+                    onchange="previewButtonBackground(this)">
             </div>
+
+            <div class="form-group">
+                <label>صورة الغلاف</label>
+
+                <input
+                    type="file"
+                    id="coverImage"
+                    accept="image/*"
+                    onchange="previewCoverImage(this)">
+            </div>
+
         </div>
 
         <!-- 2. الخطوط ونمط العرض -->
@@ -292,6 +307,58 @@ input[type="text"]:focus, select:focus {
 <script>
 let currentLoadedCode = "";
 
+let backgroundImageData = "";
+let buttonBackgroundData = "";
+let coverImageData = "";
+
+function previewBackgroundImage(input){
+
+    if(!input.files[0]) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        backgroundImageData = e.target.result;
+
+        triggerLiveUpdate();
+    };
+
+    reader.readAsDataURL(input.files[0]);
+}
+
+function previewButtonBackground(input){
+
+    if(!input.files[0]) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        buttonBackgroundData = e.target.result;
+
+        triggerLiveUpdate();
+    };
+
+    reader.readAsDataURL(input.files[0]);
+}
+
+function previewCoverImage(input){
+
+    if(!input.files[0]) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        coverImageData = e.target.result;
+
+        triggerLiveUpdate();
+    };
+
+    reader.readAsDataURL(input.files[0]);
+}
+
 /* تحديث المعاينة مع إرسال إعدادات التصميم الحالية لصفحة الـ QR فوراً */
 function updatePagePreview(customerCode){
     if(!customerCode) return;
@@ -300,16 +367,23 @@ function updatePagePreview(customerCode){
     const iframe = document.getElementById("previewFrame");
     
     // بناء رابط المعاينة مع تمرير كود العميل والتصميم المخصص الحالي كـ Query Parameters
-    const bg = encodeURIComponent(document.getElementById("designBgColor").value);
-    const primary = encodeURIComponent(document.getElementById("designPrimaryColor").value);
-    const text = encodeURIComponent(document.getElementById("designTextColor").value);
-    const cardBg = encodeURIComponent(document.getElementById("designCardBgColor").value);
     const font = encodeURIComponent(document.getElementById("designFontFamily").value);
     const cardStyle = encodeURIComponent(document.getElementById("designCardStyle").value);
     const iconColor = encodeURIComponent(document.getElementById("designIconColor").value);
     const iconsLayout = encodeURIComponent(document.getElementById("designIconsLayout").value);
 
-    iframe.src = `qr.html?id=${encodeURIComponent(customerCode)}&bg=${bg}&primary=${primary}&text=${text}&cardBg=${cardBg}&font=${font}&cardStyle=${cardStyle}&iconColor=${iconColor}&iconsLayout=${iconsLayout}&t=${Date.now()}`;
+    const bgImage = encodeURIComponent(backgroundImageData);
+
+    const cardImage = encodeURIComponent(buttonBackgroundData);
+
+    const coverImage = encodeURIComponent(coverImageData);
+
+    iframe.src =
+    `qr.html?id=${encodeURIComponent(customerCode)}
+    &bgImage=${bgImage}
+    &cardImage=${cardImage}
+    &coverImage=${coverImage}
+    &t=${Date.now()}`;
 }
 
 function triggerLiveUpdate() {
@@ -334,14 +408,13 @@ function saveDesignSettings() {
 
     // تجميع إعدادات التصميم لحفظها في قاعدة البيانات تحت العميل
     const designData = {
-        bgColor: document.getElementById("designBgColor").value,
-        primaryColor: document.getElementById("designPrimaryColor").value,
-        textColor: document.getElementById("designTextColor").value,
-        cardBgColor: document.getElementById("designCardBgColor").value,
         fontFamily: document.getElementById("designFontFamily").value,
         cardStyle: document.getElementById("designCardStyle").value,
         iconColor: document.getElementById("designIconColor").value,
-        iconsLayout: document.getElementById("designIconsLayout").value
+        iconsLayout: document.getElementById("designIconsLayout").value,
+        bgImage: backgroundImageData,
+        cardImage: buttonBackgroundData,
+        coverImage: coverImageData
     };
 
     // التواصل مع الـ Firebase عبر الـ parent (لوحة التحكم الرئيسية) لحفظ التخصيص
@@ -404,14 +477,20 @@ function loadCustomerDesign(code) {
             parentWindow.db.ref("customers/" + code + "/design").once("value").then(snapshot => {
                 const design = snapshot.val();
                 if (design) {
-                    if(design.bgColor) document.getElementById("designBgColor").value = design.bgColor;
-                    if(design.primaryColor) document.getElementById("designPrimaryColor").value = design.primaryColor;
-                    if(design.textColor) document.getElementById("designTextColor").value = design.textColor;
-                    if(design.cardBgColor) document.getElementById("designCardBgColor").value = design.cardBgColor;
                     if(design.fontFamily) document.getElementById("designFontFamily").value = design.fontFamily;
                     if(design.cardStyle) document.getElementById("designCardStyle").value = design.cardStyle;
                     if(design.iconColor) document.getElementById("designIconColor").value = design.iconColor;
                     if(design.iconsLayout) document.getElementById("designIconsLayout").value = design.iconsLayout;
+                    
+                    if(design.bgImage) {
+                        backgroundImageData = design.bgImage;
+                    }
+                    if(design.cardImage) {
+                        buttonBackgroundData = design.cardImage;
+                    }
+                    if(design.coverImage) {
+                        coverImageData = design.coverImage;
+                    }
                     
                     updatePagePreview(code);
                 }
