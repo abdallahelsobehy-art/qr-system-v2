@@ -359,35 +359,14 @@ function previewCoverImage(input){
     reader.readAsDataURL(input.files[0]);
 }
 
-/* تحديث المعاينة مع إرسال إعدادات التصميم الحالية لصفحة الـ QR فوراً */
 function updatePagePreview(customerCode){
+
     if(!customerCode) return;
+
     currentLoadedCode = customerCode;
 
-    const iframe = document.getElementById("previewFrame");
-    
-    // بناء رابط المعاينة مع تمرير كود العميل والتصميم المخصص الحالي كـ Query Parameters
-    const font = encodeURIComponent(document.getElementById("designFontFamily").value);
-    const cardStyle = encodeURIComponent(document.getElementById("designCardStyle").value);
-    const iconColor = encodeURIComponent(document.getElementById("designIconColor").value);
-    const iconsLayout = encodeURIComponent(document.getElementById("designIconsLayout").value);
-
-    const bgImage = encodeURIComponent(backgroundImageData);
-
-    const cardImage = encodeURIComponent(buttonBackgroundData);
-
-    const coverImage = encodeURIComponent(coverImageData);
-
-    iframe.src =
-    `qr.html?id=${encodeURIComponent(customerCode)}
-    &font=${font}
-    &cardStyle=${cardStyle}
-    &iconColor=${iconColor}
-    &iconsLayout=${iconsLayout}
-    &bgImage=${bgImage}
-    &cardImage=${cardImage}
-    &coverImage=${coverImage}
-    &t=${Date.now()}`;
+    document.getElementById("previewFrame").src =
+        `qr.html?id=${encodeURIComponent(customerCode)}&t=${Date.now()}`;
 }
 
 function triggerLiveUpdate() {
