@@ -7,7 +7,7 @@
 <title>تخصيص صفحة العميل - الورشة</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&family=Changa:wght@400;700&family=Almarai:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 *{
@@ -85,6 +85,20 @@ body{
     padding-bottom: 10px;
 }
 
+.designer-card h4 {
+    margin-top: 20px;
+    margin-bottom: 12px;
+    color: #2d3748;
+    font-size: 14px;
+    font-weight: bold;
+    border-right: 3px solid #3b82f6;
+    padding-right: 10px;
+}
+
+.designer-card h4:first-child {
+    margin-top: 0;
+}
+
 .form-group {
     margin-bottom: 15px;
 }
@@ -97,7 +111,7 @@ body{
     font-size: 13px;
 }
 
-input[type="text"], input[type="color"], select {
+input[type="text"], input[type="color"], input[type="range"], input[type="file"], select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #dcdcdc;
@@ -115,14 +129,66 @@ input[type="color"] {
     cursor: pointer;
 }
 
-input[type="text"]:focus, select:focus {
+input[type="range"] {
+    padding: 0;
+    height: 6px;
+    cursor: pointer;
+}
+
+input[type="text"]:focus, select:focus, input[type="file"]:focus {
     border-color: #3b82f6;
+}
+
+input[type="file"] {
+    padding: 8px 12px;
+    cursor: pointer;
 }
 
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.radio-item:hover {
+    border-color: #cbd5e0;
+    background: #f8fafc;
+}
+
+.radio-item input[type="radio"] {
+    width: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.radio-item.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
 }
 
 .options-grid {
@@ -142,6 +208,8 @@ input[type="text"]:focus, select:focus {
     align-items: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .option-box:hover {
@@ -170,75 +238,75 @@ input[type="text"]:focus, select:focus {
 .btn-save-design {
     background-color: #111;
     color: #fff;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .btn:hover {
     opacity: 0.9;
 }
 
-/* معاينة الخطوط */
-.font-cairo { font-family: 'Cairo', sans-serif; }
-.font-tajawal { font-family: 'Tajawal', sans-serif; }
-.font-changa { font-family: 'Changa', sans-serif; }
-
-/* رفع الخلفيات */
-.file-row{
-display:flex;
-flex-direction:column;
-gap:8px;
+.btn-file {
+    background: #4A5568;
+    color: #fff;
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.btn-file{
-background:#4A5568;
-color:#fff;
-padding:9px 14px;
-border-radius:8px;
-font-size:13px;
-font-weight:bold;
-cursor:pointer;
-width:fit-content;
-display:inline-flex;
-align-items:center;
-gap:6px;
+.btn-file:hover {
+    opacity: 0.9;
 }
 
-.btn-file:hover{
-opacity:.9;
+input[type="file"] {
+    display: none;
 }
 
-input[type="file"]{
-display:none;
+.range-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #718096;
 }
 
-.bg-preview{
-display:none;
-margin-top:8px;
-max-width:100%;
-max-height:90px;
-border-radius:8px;
-border:1px solid #e2e8f0;
-object-fit:cover;
+.bg-preview {
+    display: none;
+    margin-top: 8px;
+    max-width: 100%;
+    max-height: 90px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    object-fit: cover;
 }
 
 /* موبايل */
 @media(max-width:992px){
-
     .designer-layout{
-        display:block;
+        display: block;
     }
 
     .preview-container{
-        position:relative;
-        top:auto;
-        width:100%;
-        margin-bottom:20px;
+        position: relative;
+        top: auto;
+        width: 100%;
+        margin-bottom: 20px;
     }
 
     .phone-frame{
-        width:180px;
-        height:360px;
-        margin:auto;
+        width: 180px;
+        height: 360px;
+        margin: auto;
+    }
+
+    .grid-3 {
+        grid-template-columns: 1fr 1fr;
     }
 }
 </style>
@@ -256,15 +324,239 @@ object-fit:cover;
 
     <!-- أدوات التخصيص -->
     <div class="designer-panel">
-        <!-- جاهز للإضافة -->
+
+        <!-- قسم 4: الخلفيات والخطوط والأيقونات والصور -->
+        <div class="designer-card">
+            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> تخصيص الصفحة والأزرار</h3>
+
+            <!-- 1. الخلفيات -->
+            <h4><i class="fa-solid fa-image"></i> الخلفيات</h4>
+
+            <div class="form-group">
+                <label>خلفية الصفحة</label>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectBackgroundType(this, 'default')">
+                        <input type="radio" name="bgType" value="default" checked>
+                        <span>استخدام الخلفية الافتراضية</span>
+                    </label>
+                    <label class="radio-item" onclick="selectBackgroundType(this, 'upload')">
+                        <input type="radio" name="bgType" value="upload">
+                        <span>رفع صورة من الجهاز</span>
+                    </label>
+                </div>
+                <div id="bgUploadContainer" style="display:none; margin-top:10px;">
+                    <label class="btn-file" for="bgImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
+                    <input type="file" id="bgImageInput" accept="image/*" onchange="handleBgImageUpload(this)">
+                    <img id="bgImagePreview" class="bg-preview" alt="معاينة خلفية الصفحة">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>خلفية الأزرار</label>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectButtonBgType(this, 'default')">
+                        <input type="radio" name="btnBgType" value="default" checked>
+                        <span>افتراضي</span>
+                    </label>
+                    <label class="radio-item" onclick="selectButtonBgType(this, 'upload')">
+                        <input type="radio" name="btnBgType" value="upload">
+                        <span>رفع صورة</span>
+                    </label>
+                </div>
+                <div id="btnBgUploadContainer" style="display:none; margin-top:10px;">
+                    <label class="btn-file" for="btnBgImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
+                    <input type="file" id="btnBgImageInput" accept="image/*" onchange="handleButtonBgImageUpload(this)">
+                    <img id="btnBgImagePreview" class="bg-preview" alt="معاينة خلفية الأزرار">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>صورة الغلاف (Cover Image)</label>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectCoverType(this, 'default')">
+                        <input type="radio" name="coverType" value="default" checked>
+                        <span>افتراضي</span>
+                    </label>
+                    <label class="radio-item" onclick="selectCoverType(this, 'upload')">
+                        <input type="radio" name="coverType" value="upload">
+                        <span>رفع صورة</span>
+                    </label>
+                </div>
+                <div id="coverUploadContainer" style="display:none; margin-top:10px;">
+                    <label class="btn-file" for="coverImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
+                    <input type="file" id="coverImageInput" accept="image/*" onchange="handleCoverImageUpload(this)">
+                    <img id="coverImagePreview" class="bg-preview" alt="معاينة صورة الغلاف">
+                </div>
+            </div>
+
+            <!-- 2. الخطوط والنصوص -->
+            <h4><i class="fa-solid fa-font"></i> الخطوط والنصوص</h4>
+
+            <div class="form-group">
+                <label>نوع الخط</label>
+                <select id="fontFamily" onchange="triggerLiveUpdate()">
+                    <option value="'Cairo', sans-serif">كايرو (Cairo)</option>
+                    <option value="'Tajawal', sans-serif">تجوال (Tajawal)</option>
+                    <option value="'Changa', sans-serif">شانجا (Changa)</option>
+                    <option value="'Almarai', sans-serif">الماراي (Almarai)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>لون الخط</label>
+                <input type="color" id="fontColor" value="#ffffff" oninput="triggerLiveUpdate()">
+            </div>
+
+            <div class="form-group">
+                <label>حجم الخط</label>
+                <input type="range" id="fontSize" min="12" max="32" value="20" oninput="triggerLiveUpdate()">
+                <div class="range-value">
+                    <span>12px</span>
+                    <span id="fontSizeValue">20px</span>
+                    <span>32px</span>
+                </div>
+            </div>
+
+            <!-- 3. الأزرار -->
+            <h4><i class="fa-solid fa-button"></i> الأزرار</h4>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>لون خلفية الزر</label>
+                    <input type="color" id="buttonBgColor" value="#3b82f6" oninput="triggerLiveUpdate()">
+                </div>
+                <div class="form-group">
+                    <label>لون النص</label>
+                    <input type="color" id="buttonTextColor" value="#ffffff" oninput="triggerLiveUpdate()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>لون الأيقونة</label>
+                <input type="color" id="iconColor" value="#ffffff" oninput="triggerLiveUpdate()">
+            </div>
+
+            <div class="form-group">
+                <label>درجة الحدة (Border Radius)</label>
+                <input type="range" id="buttonRadius" min="0" max="50" value="18" oninput="triggerLiveUpdate()">
+                <div class="range-value">
+                    <span>0px (مربع)</span>
+                    <span id="buttonRadiusValue">18px</span>
+                    <span>50px (كبسولة)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>الظل (Shadow)</label>
+                <input type="range" id="buttonShadow" min="0" max="20" value="6" oninput="triggerLiveUpdate()">
+                <div class="range-value">
+                    <span>بدون</span>
+                    <span id="buttonShadowValue">6px</span>
+                    <span>قوي</span>
+                </div>
+            </div>
+
+            <!-- 4. الأيقونات -->
+            <h4><i class="fa-solid fa-icons"></i> الأيقونات</h4>
+
+            <div class="form-group">
+                <label>حجم الأيقونة</label>
+                <div class="options-grid">
+                    <div class="option-box" onclick="selectIconSize(this, 'small')">صغير</div>
+                    <div class="option-box active" onclick="selectIconSize(this, 'medium')">متوسط</div>
+                    <div class="option-box" onclick="selectIconSize(this, 'large')">كبير</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>مكان الأيقونة</label>
+                <div class="options-grid">
+                    <div class="option-box active" onclick="selectIconPosition(this, 'right')">يمين</div>
+                    <div class="option-box" onclick="selectIconPosition(this, 'left')">يسار</div>
+                    <div class="option-box" onclick="selectIconPosition(this, 'top')">أعلى</div>
+                    <div class="option-box" onclick="selectIconPosition(this, 'bottom')">أسفل</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>شكل الأيقونة</label>
+                <div class="options-grid">
+                    <div class="option-box active" onclick="selectIconShape(this, 'square')">مربع</div>
+                    <div class="option-box" onclick="selectIconShape(this, 'rounded')">مستدير</div>
+                    <div class="option-box" onclick="selectIconShape(this, 'circle')">دائرة</div>
+                    <div class="option-box" onclick="selectIconShape(this, 'none')">بدون</div>
+                </div>
+            </div>
+
+            <!-- 5. الشعار والصور -->
+            <h4><i class="fa-solid fa-image"></i> الشعار والصور</h4>
+
+            <div class="form-group">
+                <label>لوجو العميل</label>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectLogoType(this, 'default')">
+                        <input type="radio" name="logoType" value="default" checked>
+                        <span>استخدام الصورة الافتراضية</span>
+                    </label>
+                    <label class="radio-item" onclick="selectLogoType(this, 'upload')">
+                        <input type="radio" name="logoType" value="upload">
+                        <span>رفع صورة خاصة</span>
+                    </label>
+                </div>
+                <div id="logoUploadContainer" style="display:none; margin-top:10px;">
+                    <label class="btn-file" for="logoImageInput"><i class="fa-solid fa-upload"></i> اختيار الصورة</label>
+                    <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoImageUpload(this)">
+                    <img id="logoImagePreview" class="bg-preview" alt="معاينة اللوجو">
+                </div>
+            </div>
+
+            <!-- زر الحفظ -->
+            <button class="btn btn-save-design" onclick="saveDesignSettings()"><i class="fa-solid fa-floppy-disk"></i> حفظ إعدادات التصميم</button>
+
+        </div>
+
     </div>
 
 </div>
 
 <script>
 let currentLoadedCode = "";
+let designData = {
+    backgroundType: "default",
+    backgroundImage: "",
+    buttonBgType: "default",
+    buttonBgImage: "",
+    coverType: "default",
+    coverImage: "",
+    fontFamily: "'Cairo', sans-serif",
+    fontColor: "#ffffff",
+    fontSize: "20",
+    buttonBgColor: "#3b82f6",
+    buttonTextColor: "#ffffff",
+    iconColor: "#ffffff",
+    buttonRadius: "18",
+    buttonShadow: "6",
+    iconSize: "medium",
+    iconPosition: "right",
+    iconShape: "square",
+    logoType: "default",
+    logoImage: ""
+};
 
-/* تحميل صفحة المعاينة لعميل معين مع تمرير وضع المعاينة preview=1 لمنع التحويل */
+/* تجميع إعدادات التصميم الحالية */
+function collectDesign() {
+    return designData;
+}
+
+/* إرسال التصميم الحي لصفحة المعاينة بدون إعادة تحميل (PostMessage) */
+function sendDesignToPreview() {
+    const iframe = document.getElementById("previewFrame");
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: "applyDesign", design: collectDesign() }, "*");
+    }
+}
+
+/* تحميل صفحة المعاينة لعميل معين */
 function updatePagePreview(customerCode){
     if(!customerCode) return;
     currentLoadedCode = customerCode;
@@ -273,7 +565,241 @@ function updatePagePreview(customerCode){
     iframe.src = `qr.html?id=${encodeURIComponent(customerCode)}&preview=1&t=${Date.now()}`;
 }
 
-/* جلب الكود من صفحة الأدمن تلقائياً ومزامنة البيانات */
+/* أي تغيير في الأدوات بيظهر فوراً في المعاينة */
+function triggerLiveUpdate() {
+    updateDesignData();
+    sendDesignToPreview();
+}
+
+/* تحديث البيانات من الحقول */
+function updateDesignData() {
+    designData.fontFamily = document.getElementById("fontFamily").value;
+    designData.fontColor = document.getElementById("fontColor").value;
+    designData.fontSize = document.getElementById("fontSize").value;
+    designData.buttonBgColor = document.getElementById("buttonBgColor").value;
+    designData.buttonTextColor = document.getElementById("buttonTextColor").value;
+    designData.iconColor = document.getElementById("iconColor").value;
+    designData.buttonRadius = document.getElementById("buttonRadius").value;
+    designData.buttonShadow = document.getElementById("buttonShadow").value;
+}
+
+/* ضغط الصور وتصغيرها */
+function compressImage(file, callback) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const maxDim = 1200;
+            let w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+                const ratio = Math.min(maxDim / w, maxDim / h);
+                w = Math.round(w * ratio);
+                h = Math.round(h * ratio);
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+            callback(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function setBgPreview(previewId, url) {
+    const p = document.getElementById(previewId);
+    if (p) {
+        p.src = url || "";
+        p.style.display = url ? "block" : "none";
+    }
+}
+
+/* خلفية الصفحة */
+function selectBackgroundType(element, type) {
+    document.querySelectorAll('label[onclick*="selectBackgroundType"]').forEach(el => {
+        el.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.backgroundType = type;
+    document.getElementById("bgUploadContainer").style.display = type === "upload" ? "block" : "none";
+    
+    if (type === "default") {
+        designData.backgroundImage = "";
+        setBgPreview("bgImagePreview", "");
+    }
+    
+    triggerLiveUpdate();
+}
+
+function handleBgImageUpload(input) {
+    if (input.files && input.files[0]) {
+        compressImage(input.files[0], function(dataUrl) {
+            designData.backgroundImage = dataUrl;
+            setBgPreview("bgImagePreview", dataUrl);
+            sendDesignToPreview();
+        });
+    }
+}
+
+/* خلفية الأزرار */
+function selectButtonBgType(element, type) {
+    document.querySelectorAll('label[onclick*="selectButtonBgType"]').forEach(el => {
+        el.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.buttonBgType = type;
+    document.getElementById("btnBgUploadContainer").style.display = type === "upload" ? "block" : "none";
+    
+    if (type === "default") {
+        designData.buttonBgImage = "";
+        setBgPreview("btnBgImagePreview", "");
+    }
+    
+    triggerLiveUpdate();
+}
+
+function handleButtonBgImageUpload(input) {
+    if (input.files && input.files[0]) {
+        compressImage(input.files[0], function(dataUrl) {
+            designData.buttonBgImage = dataUrl;
+            setBgPreview("btnBgImagePreview", dataUrl);
+            send DesignToPreview();
+        });
+    }
+}
+
+/* صورة الغلاف */
+function selectCoverType(element, type) {
+    document.querySelectorAll('label[onclick*="selectCoverType"]').forEach(el => {
+        el.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.coverType = type;
+    document.getElementById("coverUploadContainer").style.display = type === "upload" ? "block" : "none";
+    
+    if (type === "default") {
+        designData.coverImage = "";
+        setBgPreview("coverImagePreview", "");
+    }
+    
+    triggerLiveUpdate();
+}
+
+function handleCoverImageUpload(input) {
+    if (input.files && input.files[0]) {
+        compressImage(input.files[0], function(dataUrl) {
+            designData.coverImage = dataUrl;
+            setBgPreview("coverImagePreview", dataUrl);
+            sendDesignToPreview();
+        });
+    }
+}
+
+/* حجم الأيقونة */
+function selectIconSize(element, size) {
+    element.parentElement.querySelectorAll('.option-box').forEach(box => {
+        box.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.iconSize = size;
+    triggerLiveUpdate();
+}
+
+/* مكان الأيقونة */
+function selectIconPosition(element, position) {
+    element.parentElement.querySelectorAll('.option-box').forEach(box => {
+        box.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.iconPosition = position;
+    triggerLiveUpdate();
+}
+
+/* شكل الأيقونة */
+function selectIconShape(element, shape) {
+    element.parentElement.querySelectorAll('.option-box').forEach(box => {
+        box.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.iconShape = shape;
+    triggerLiveUpdate();
+}
+
+/* لوجو العميل */
+function selectLogoType(element, type) {
+    document.querySelectorAll('label[onclick*="selectLogoType"]').forEach(el => {
+        el.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    designData.logoType = type;
+    document.getElementById("logoUploadContainer").style.display = type === "upload" ? "block" : "none";
+    
+    if (type === "default") {
+        designData.logoImage = "";
+        setBgPreview("logoImagePreview", "");
+    }
+    
+    triggerLiveUpdate();
+}
+
+function handleLogoImageUpload(input) {
+    if (input.files && input.files[0]) {
+        compressImage(input.files[0], function(dataUrl) {
+            designData.logoImage = dataUrl;
+            setBgPreview("logoImagePreview", dataUrl);
+            sendDesignToPreview();
+        });
+    }
+}
+
+/* تحديث قيم الـ Range */
+document.getElementById("fontSize")?.addEventListener("input", function() {
+    document.getElementById("fontSizeValue").textContent = this.value + "px";
+});
+
+document.getElementById("buttonRadius")?.addEventListener("input", function() {
+    document.getElementById("buttonRadiusValue").textContent = this.value + "px";
+});
+
+document.getElementById("buttonShadow")?.addEventListener("input", function() {
+    document.getElementById("buttonShadowValue").textContent = this.value + "px";
+});
+
+/* حفظ الإعدادات */
+function saveDesignSettings() {
+    if (!currentLoadedCode) {
+        alert("لا يوجد عميل محدد لحفظ إعدادات التصميم الخاصة به.");
+        return;
+    }
+
+    updateDesignData();
+
+    try {
+        const parentWindow = window.parent;
+        if (parentWindow && parentWindow.db) {
+            parentWindow.db.ref("customers/" + currentLoadedCode + "/design").set(designData)
+            .then(() => {
+                alert("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!");
+            })
+            .catch(err => {
+                alert("حدث خطأ أثناء الحفظ: " + err.message);
+            });
+        }
+    } catch (e) {
+        console.log("Database connection error:", e);
+        alert("تم تطبيق التصميم محلياً بنجاح.");
+    }
+}
+
+/* جلب الكود من صفحة الأدمن تلقائياً */
 function syncWithAdmin(){
     try{
         const parentDoc = window.parent.document;
@@ -283,10 +809,12 @@ function syncWithAdmin(){
 
         if(codeInput.value){
             updatePagePreview(codeInput.value);
+            loadCustomerDesign(codeInput.value);
         }
 
         codeInput.addEventListener("input", function(){
             updatePagePreview(this.value);
+            loadCustomerDesign(this.value);
         });
 
         const customerSelect = parentDoc.getElementById("customerSelect");
@@ -296,12 +824,65 @@ function syncWithAdmin(){
                     const currentCode = parentDoc.getElementById("code").value;
                     if (currentCode) {
                         updatePagePreview(currentCode);
+                        loadCustomerDesign(currentCode);
                     }
                 }, 500);
             });
         }
     }catch(err){
         console.log("Sync error:", err);
+    }
+}
+
+/* تحميل تصميم العميل المحفوظ */
+function loadCustomerDesign(code) {
+    try {
+        const parentWindow = window.parent;
+        if (parentWindow && parentWindow.db) {
+            parentWindow.db.ref("customers/" + code + "/design").once("value").then(snapshot => {
+                const design = snapshot.val();
+                if (design) {
+                    designData = { ...designData, ...design };
+                    
+                    // تحديث الحقول
+                    if(design.fontFamily) document.getElementById("fontFamily").value = design.fontFamily;
+                    if(design.fontColor) document.getElementById("fontColor").value = design.fontColor;
+                    if(design.fontSize) {
+                        document.getElementById("fontSize").value = design.fontSize;
+                        document.getElementById("fontSizeValue").textContent = design.fontSize + "px";
+                    }
+                    if(design.buttonBgColor) document.getElementById("buttonBgColor").value = design.buttonBgColor;
+                    if(design.buttonTextColor) document.getElementById("buttonTextColor").value = design.buttonTextColor;
+                    if(design.iconColor) document.getElementById("iconColor").value = design.iconColor;
+                    if(design.buttonRadius) {
+                        document.getElementById("buttonRadius").value = design.buttonRadius;
+                        document.getElementById("buttonRadiusValue").textContent = design.buttonRadius + "px";
+                    }
+                    if(design.buttonShadow) {
+                        document.getElementById("buttonShadow").value = design.buttonShadow;
+                        document.getElementById("buttonShadowValue").textContent = design.buttonShadow + "px";
+                    }
+
+                    // تحديث الصور
+                    if(design.backgroundImage) {
+                        setBgPreview("bgImagePreview", design.backgroundImage);
+                    }
+                    if(design.buttonBgImage) {
+                        setBgPreview("btnBgImagePreview", design.buttonBgImage);
+                    }
+                    if(design.coverImage) {
+                        setBgPreview("coverImagePreview", design.coverImage);
+                    }
+                    if(design.logoImage) {
+                        setBgPreview("logoImagePreview", design.logoImage);
+                    }
+
+                    sendDesignToPreview();
+                }
+            });
+        }
+    } catch(e) {
+        console.log("Could not load design from DB", e);
     }
 }
 
