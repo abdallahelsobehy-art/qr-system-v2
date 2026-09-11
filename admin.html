@@ -277,12 +277,12 @@
             justify-content: center;
         }
         
-#qrContainer svg,
-#qrContainer canvas {
-    width: 240px !important;
-    height: 240px !important;
-    max-width: 100%;
-}
+        #qrContainer svg,
+        #qrContainer canvas {
+            width: 240px !important;
+            height: 240px !important;
+            max-width: 100%;
+        }
 
         .qr-frame-text {
             margin-top: 8px;
@@ -493,15 +493,15 @@
 
         .btn-modal-ok { background-color: #111; color: #fff; }
         .btn-modal-cancel { background-color: #e2e8f0; color: #4a5568; }
- #qrContainer svg {
-    shape-rendering: crispEdges;
-}
-
+        
+        #qrContainer svg {
+            shape-rendering: crispEdges;
+        }
     </style>
 </head>
 <body>
 
-    <!-- PWA Install Button -->
+<!-- PWA Install Button -->
 <button id="installButton">📥 تثبيت التطبيق</button>
 
 <div class="login-overlay" id="loginModal">
@@ -790,22 +790,20 @@
         </div>
     </div>
 
-</div>
-
-<!-- التبويب الرابع : تخصيص صفحة العميل -->
-<div id="tab-page-designer" class="tab-content">
-
-    <iframe
-        id="pageDesignerFrame"
-        src="page-designer.html"
-        style="
-            width:100%;
-            height:1200px;
-            border:none;
-            border-radius:15px;
-            background:#fff;
-        ">
-    </iframe>
+    <!-- التبويب الرابع: تخصيص صفحة العميل -->
+    <div id="tab-page-designer" class="tab-content">
+        <iframe
+            id="pageDesignerFrame"
+            src="designer.html"
+            style="
+                width:100%;
+                height:1200px;
+                border:none;
+                border-radius:15px;
+                background:#fff;
+            ">
+        </iframe>
+    </div>
 
 </div>
     
@@ -985,23 +983,20 @@
         return el ? el.value.trim() : "";
     }
 
-        function generateNextCustomerCode() {
-        // 1. توليد 7 أرقام عشوائية فريدة ومستحيلة التشابه لتكون هي الجزء الأول
+    function generateNextCustomerCode() {
         let randomPrefixNums = "";
         for (let i = 0; i < 7; i++) {
-            randomPrefixNums += Math.floor(Math.random() * 10); // يختار رقم عشوائي من 0 لـ 9
+            randomPrefixNums += Math.floor(Math.random() * 10);
         }
         
         const prefixCode = "CODE:" + randomPrefixNums;
 
-        // 2. البحث في قاعدة البيانات لمعرفة آخر رقم تسلسلي (Sequence) تم إضافته
         db.ref("customers").once("value").then(snapshot => {
             const data = snapshot.val();
             let maxSeq = 0;
 
             if (data) {
                 Object.keys(data).forEach(key => {
-                    // استخلاص آخر 5 أرقام من الكود المخزن في القاعدة
                     if (key.length >= 5) {
                         const lastFive = key.slice(-5);
                         const num = parseInt(lastFive, 10);
@@ -1012,31 +1007,23 @@
                 });
             }
 
-            // الرقم التسلسلي التالي (يزيد واحد عن الأخير)
             const nextSeq = maxSeq + 1;
-            const formattedSeq = String(nextSeq).padStart(5, "0"); // لضمان ظهورها 5 خانات مثل 00001
-
-            // 3. دمج الـ 7 أرقام العشوائية مع الـ 5 أرقام التسلسلية
+            const formattedSeq = String(nextSeq).padStart(5, "0");
             const nextCode = prefixCode + formattedSeq;
 
             SafeSetValue("code", nextCode);
-   SafeSetValue(
-    "redirectUrl",
-    "https://abdallahelsobehy-art.github.io/Qr-codes/?code=" + nextCode
-);
-        
-        }).catch(err => {
-            // حالة احتياطية لو القاعدة فارغة
-            SafeSetValue("code", prefixCode + "00001");
-
             SafeSetValue(
-    "redirectUrl",
-    "https://abdallahelsobehy-art.github.io/Qr-codes/?code=" + (prefixCode + "00001")
-);
-            
+                "redirectUrl",
+                "https://abdallahelsobehy-art.github.io/Qr-codes/?code=" + nextCode
+            );
+        }).catch(err => {
+            SafeSetValue("code", prefixCode + "00001");
+            SafeSetValue(
+                "redirectUrl",
+                "https://abdallahelsobehy-art.github.io/Qr-codes/?code=" + (prefixCode + "00001")
+            );
         });
     }
-
 
     function handleMainLogoUpload(input) {
         if (input.files && input.files[0]) {
@@ -1070,27 +1057,25 @@
             const select = document.getElementById("customerSelect");
             select.innerHTML = '<option value="">اختر العميل</option>';
             
-let customers = [];
+            let customers = [];
 
-snapshot.forEach(function(child) {
-    customers.push({
-        key: child.key,
-        data: child.val()
-    });
-});
+            snapshot.forEach(function(child) {
+                customers.push({
+                    key: child.key,
+                    data: child.val()
+                });
+            });
 
-customers.sort((a, b) => {
-    return parseInt(a.key.slice(-5)) - parseInt(b.key.slice(-5));
-});
+            customers.sort((a, b) => {
+                return parseInt(a.key.slice(-5)) - parseInt(b.key.slice(-5));
+            });
 
-customers.forEach(function(customer) {
-    const option = document.createElement("option");
-    option.value = customer.key;
-    option.textContent =
-        (customer.data.name || "بدون اسم") +
-        " (" + customer.key + ")";
-    select.appendChild(option);
-});
+            customers.forEach(function(customer) {
+                const option = document.createElement("option");
+                option.value = customer.key;
+                option.textContent = (customer.data.name || "بدون اسم") + " (" + customer.key + ")";
+                select.appendChild(option);
+            });
         });
     }
 
@@ -1192,19 +1177,19 @@ customers.forEach(function(customer) {
             vodafonecash: SafeGetValue("vodafonecash"),
             footer: SafeGetValue("footer")
         };
-db.ref("customers/" + code).set(customerData)
-.then(function() {
-    showCustomAlert("تم حفظ بيانات العميل بنجاح", function() {
-        showCustomConfirm("هل تريد تحميل ملف الـ QR الآن؟", function() {
-            downloadQR();
-        });
-    });
-    clearForm();
-})
-.catch(function(error) {
-    showCustomAlert("خطأ أثناء الحفظ: " + error.message);
-});
 
+        db.ref("customers/" + code).set(customerData)
+        .then(function() {
+            showCustomAlert("تم حفظ بيانات العميل بنجاح", function() {
+                showCustomConfirm("هل تريد تحميل ملف الـ QR الآن؟", function() {
+                    downloadQR();
+                });
+            });
+            clearForm();
+        })
+        .catch(function(error) {
+            showCustomAlert("خطأ أثناء الحفظ: " + error.message);
+        });
     }
 
     function deleteCustomer() {
@@ -1353,25 +1338,15 @@ db.ref("customers/" + code).set(customerData)
         qrCodeInstance = new QRCodeStyling(qrConfig);
         qrCodeInstance.append(qrContainer);
 
-        // تحديث شاشة المعاينة داخل التبويب الرابع
+        // تحديث شاشة المعاينة داخل التبويب الرابع (Designer)
         const designerFrame = document.getElementById("pageDesignerFrame");
-
         if (designerFrame) {
-
             const customerId = SafeGetValue("code");
-
             try {
-
-                if (
-                    designerFrame.contentWindow &&
-                    typeof designerFrame.contentWindow.updatePagePreview === "function"
-                ) {
-
+                if (designerFrame.contentWindow && typeof designerFrame.contentWindow.updatePagePreview === "function") {
                     designerFrame.contentWindow.updatePagePreview(customerId);
-
                 }
-
-            } catch(e){
+            } catch(e) {
                 console.log("Preview Frame Not Ready");
             }
         }
@@ -1394,25 +1369,16 @@ db.ref("customers/" + code).set(customerData)
     }
 
     window.addEventListener("load", function(){
-
         const designerFrame = document.getElementById("pageDesignerFrame");
-
         if(designerFrame){
-
             designerFrame.onload = function(){
-
                 const customerId = SafeGetValue("code");
-
-                if(
-                    this.contentWindow &&
-                    typeof this.contentWindow.updatePagePreview === "function"
-                ){
+                if(this.contentWindow && typeof this.contentWindow.updatePagePreview === "function"){
                     this.contentWindow.updatePagePreview(customerId);
                 }
             };
         }
-
     });
 </script>
 </body>
-                                                                        </html>
+    </html>
