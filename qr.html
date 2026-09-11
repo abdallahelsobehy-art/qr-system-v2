@@ -35,7 +35,26 @@ max-width:500px;
 text-align:center;
 }
 
-/* إطار اللوجو بنفس خامة ولون أزرار الأيقونات */
+/* غلاف الصورة العلويه */
+.cover-image {
+width: 100%;
+height: 200px;
+border-radius: 18px;
+margin-bottom: 20px;
+overflow: hidden;
+position: relative;
+background: url("assets/background.jpg") center center/cover;
+box-shadow: 0 6px 15px rgba(0,0,0,.25);
+}
+
+.cover-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}
+
+/* إطار اللوجو */
 .logo-container{
 width: 100%;
 height: 200px;
@@ -51,7 +70,6 @@ justify-content: center;
 padding: 15px;
 }
 
-/* الطبقة الشفافة البيضاء بنفس درجة الأزرار */
 .logo-container::before{
 content: "";
 position: absolute;
@@ -60,7 +78,6 @@ background: rgba(255,255,255,.75);
 z-index: 1;
 }
 
-/* صورة اللوجو نفسها فوق الطبقة الشفافة */
 .logo-container img{
 max-width: 100%;
 max-height: 100%;
@@ -84,7 +101,6 @@ margin-bottom:30px;
 text-shadow:0 2px 8px rgba(0,0,0,.5);
 }
 
-
 .btn{
 display:flex;
 align-items:center;
@@ -105,7 +121,6 @@ box-shadow:0 6px 15px rgba(0,0,0,.25);
 cursor:pointer;
 }
 
-
 .btn::before{
 content:"";
 position:absolute;
@@ -113,12 +128,10 @@ inset:0;
 background:rgba(255,255,255,.75);
 }
 
-
 .btn span{
 position:relative;
 z-index:2;
 }
-
 
 .btn img{
 position:absolute;
@@ -131,7 +144,6 @@ width:38px;
 height:38px;
 object-fit:contain;
 }
-
 
 .footer{
 margin-top:20px;
@@ -151,16 +163,19 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 
 <div class="card">
 
-<!-- برواز اللوجو بخامة وتصميم الأزرار -->
+<!-- غلاف الصورة العلوي -->
+<div id="coverWrapper" class="cover-image" style="display:none;">
+    <img id="coverImage">
+</div>
+
+<!-- برواز اللوجو -->
 <div id="logoWrapper" class="logo-container" style="display:none;">
     <img id="logo">
 </div>
 
-
 <h1 id="name"></h1>
 
 <p id="description"></p>
-
 
 <!-- 📞 زر الاتصال المباشر -->
 <a id="phone" class="btn" style="display:none;">
@@ -264,7 +279,7 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>InstaPay</span>
 </a>
 
-<!-- Vodafone Cash (Cash) -->
+<!-- Vodafone Cash -->
 <a id="vodafonecash" class="btn" target="_blank" style="display:none;">
 <img src="assets/cash.png" class="custom-icon">
 <span>Cash</span>
@@ -288,19 +303,13 @@ text-shadow:0 2px 5px rgba(0,0,0,.5);
 <span>WE Cash</span>
 </a>
 
-
 <!-- نص الحقوق الديناميكي -->
 <div id="footerText" class="footer"></div>
 
-
 </div>
 
-
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
 
 <script>
 
@@ -315,276 +324,331 @@ const firebaseConfig = {
   measurementId: "G-RZLFVNXNV1"
 };
 
-    
 firebase.initializeApp(firebaseConfig);
-
-
 const db = firebase.database();
 
-
 const params = new URLSearchParams(window.location.search);
-
 const id = params.get("id");
+const preview = params.get("preview");
 
+let currentDesign = {};
 
+/* تطبيق التصميم على الصفحة */
+function applyDesign(design) {
+    currentDesign = design;
 
-db.ref("customers/" + id).once("value")
+    /* خلفية الصفحة */
+    if (design.backgroundType === "upload" && design.backgroundImage) {
+        document.body.style.backgroundImage = `url('${design.backgroundImage}')`;
+    } else {
+        document.body.style.backgroundImage = `url("assets/background.jpg")`;
+    }
 
-.then(function(snapshot){
+    /* الخطوط */
+    if (design.fontFamily) {
+        document.body.style.fontFamily = design.fontFamily;
+    }
 
+    if (design.fontColor) {
+        document.getElementById("name").style.color = design.fontColor;
+        document.getElementById("description").style.color = design.fontColor;
+    }
 
-const data = snapshot.val();
+    if (design.fontSize) {
+        document.getElementById("name").style.fontSize = design.fontSize + "px";
+        document.getElementById("description").style.fontSize = Math.max(14, parseInt(design.fontSize) - 6) + "px";
+    }
 
+    /* الأزرار */
+    const buttons = document.querySelectorAll(".btn");
+    buttons.forEach(btn => {
+        /* خلفية الزر */
+        if (design.buttonBgType === "upload" && design.buttonBgImage) {
+            btn.style.backgroundImage = `url('${design.buttonBgImage}')`;
+        } else {
+            btn.style.backgroundImage = `url("assets/card-bg.jpg")`;
+        }
 
+        /* لون خلفية الزر */
+        if (design.buttonBgColor) {
+            btn.style.backgroundColor = design.buttonBgColor;
+        }
 
-if(!data){
+        /* درجة الحدة */
+        if (design.buttonRadius !== undefined) {
+            btn.style.borderRadius = design.buttonRadius + "px";
+        }
 
-document.querySelector(".card").innerHTML =
-"<h2 style='color:white'>العميل غير موجود</h2>";
+        /* الظل */
+        if (design.buttonShadow !== undefined) {
+            btn.style.boxShadow = `0 ${design.buttonShadow}px ${design.buttonShadow * 2.5}px rgba(0,0,0,.25)`;
+        }
 
-document.body.style.opacity = "1";
+        /* لون النص */
+        if (design.buttonTextColor) {
+            const span = btn.querySelector("span");
+            if (span) span.style.color = design.buttonTextColor;
+        }
 
-return;
+        /* لون الأيقونة */
+        if (design.iconColor) {
+            const icon = btn.querySelector(".custom-icon");
+            if (icon) {
+                icon.style.filter = `drop-shadow(0 0 0 ${design.iconColor})`;
+                icon.style.color = design.iconColor;
+            }
+        }
 
+        /* حجم الأيقونة */
+        const icon = btn.querySelector(".custom-icon");
+        if (icon) {
+            let iconSize = 38;
+            if (design.iconSize === "small") iconSize = 28;
+            if (design.iconSize === "large") iconSize = 48;
+            icon.style.width = iconSize + "px";
+            icon.style.height = iconSize + "px";
+        }
+
+        /* مكان الأيقونة */
+        if (design.iconPosition) {
+            const icon = btn.querySelector(".custom-icon");
+            if (icon) {
+                switch(design.iconPosition) {
+                    case "left":
+                        icon.style.right = "auto";
+                        icon.style.left = "20px";
+                        btn.style.flexDirection = "row-reverse";
+                        break;
+                    case "top":
+                        icon.style.position = "relative";
+                        icon.style.right = "auto";
+                        btn.style.flexDirection = "column-reverse";
+                        break;
+                    case "bottom":
+                        icon.style.position = "relative";
+                        icon.style.right = "auto";
+                        btn.style.flexDirection = "column";
+                        break;
+                    default: // right
+                        icon.style.right = "20px";
+                        btn.style.flexDirection = "row";
+                }
+            }
+        }
+    });
+
+    /* شكل الأيقونة */
+    const icons = document.querySelectorAll(".custom-icon");
+    icons.forEach(icon => {
+        let radius = "0";
+        if (design.iconShape === "rounded") radius = "8px";
+        if (design.iconShape === "circle") radius = "50%";
+        icon.style.borderRadius = radius;
+    });
+
+    /* اللوجو */
+    const logoImg = document.getElementById("logo");
+    const logoWrapper = document.getElementById("logoWrapper");
+    if (design.logoType === "upload" && design.logoImage) {
+        logoImg.src = design.logoImage;
+        logoWrapper.style.display = "flex";
+    } else if (design.logoImage === "") {
+        logoWrapper.style.display = "none";
+    }
+
+    /* صورة الغلاف */
+    const coverImg = document.getElementById("coverImage");
+    const coverWrapper = document.getElementById("coverWrapper");
+    if (design.coverType === "upload" && design.coverImage) {
+        coverImg.src = design.coverImage;
+        coverWrapper.style.display = "block";
+    } else if (design.coverImage === "") {
+        coverWrapper.style.display = "none";
+    }
 }
 
-// معالجة الإعادة التوجيه مع دعم Preview Mode
-const isPreview =
-new URLSearchParams(location.search).get("preview") === "1";
-
-if(
-   !isPreview &&
-   data.redirectUrl &&
-   data.redirectUrl.trim() !== ""
-){
-   window.location.replace(data.redirectUrl.trim());
-   return;
-}
-
-
-// إظهار الصفحة
-document.body.style.opacity = "1";
-
-
-// معالجة عرض إطار اللوجو
-const logoElem = document.getElementById("logo");
-const logoWrapper = document.getElementById("logoWrapper");
-
-if (data.logo && data.logo.trim() !== "") {
-    logoElem.src = data.logo;
-    logoWrapper.style.display = "flex";
-} else {
-    logoWrapper.style.display = "none";
-}
-
-
-document.getElementById("name").textContent = data.name || "";
-document.getElementById("description").textContent = data.description || "";
-
-
-// ربط وإظهار الأزرار بناءً على البيانات المتوفرة
-
-if (data.phone && data.phone.trim() !== "") {
-    const phoneBtn = document.getElementById("phone");
-    phoneBtn.href = "tel:" + data.phone.trim();
-    phoneBtn.style.display = "flex";
-}
-
-// واتساب (تحويل مباشر للشات)
-if (data.whatsapp && data.whatsapp.trim() !== "") {
-    const el = document.getElementById("whatsapp");
-    let waNum = data.whatsapp.replace(/\D/g, '');
-    el.href = "https://wa.me/" + waNum;
-    el.style.display = "flex";
-}
-
-if (data.telegram && data.telegram.trim() !== "") {
-    const el = document.getElementById("telegram");
-    el.href = data.telegram.trim();
-    el.style.display = "flex";
-}
-
-if (data.messenger && data.messenger.trim() !== "") {
-    const el = document.getElementById("messenger");
-    el.href = data.messenger.trim();
-    el.style.display = "flex";
-}
-
-if (data.facebook && data.facebook.trim() !== "") {
-    const el = document.getElementById("facebook");
-    el.href = data.facebook.trim();
-    el.style.display = "flex";
-}
-
-if (data.instagram && data.instagram.trim() !== "") {
-    const el = document.getElementById("instagram");
-    el.href = data.instagram.trim();
-    el.style.display = "flex";
-}
-
-if (data.tiktok && data.tiktok.trim() !== "") {
-    const el = document.getElementById("tiktok");
-    el.href = data.tiktok.trim();
-    el.style.display = "flex";
-}
-
-if (data.snapchat && data.snapchat.trim() !== "") {
-    const el = document.getElementById("snapchat");
-    el.href = data.snapchat.trim();
-    el.style.display = "flex";
-}
-
-if (data.pinterest && data.pinterest.trim() !== "") {
-    const el = document.getElementById("pinterest");
-    el.href = data.pinterest.trim();
-    el.style.display = "flex";
-}
-
-if (data.youtube && data.youtube.trim() !== "") {
-    const el = document.getElementById("youtube");
-    el.href = data.youtube.trim();
-    el.style.display = "flex";
-}
-
-if (data.linkedin && data.linkedin.trim() !== "") {
-    const el = document.getElementById("linkedin");
-    el.href = data.linkedin.trim();
-    el.style.display = "flex";
-}
-
-if (data.website && data.website.trim() !== "") {
-    const el = document.getElementById("website");
-    el.href = data.website.trim();
-    el.style.display = "flex";
-}
-
-if (data.catalog && data.catalog.trim() !== "") {
-    const el = document.getElementById("catalog");
-    el.href = data.catalog.trim();
-    el.style.display = "flex";
-}
-
-if (data.gmail && data.gmail.trim() !== "") {
-    const el = document.getElementById("gmail");
-    el.href = "mailto:" + data.gmail.trim();
-    el.style.display = "flex";
-}
-
-if (data.location && data.location.trim() !== "") {
-    const el = document.getElementById("location");
-    el.href = data.location.trim();
-    el.style.display = "flex";
-}
-
-if (data.review && data.review.trim() !== "") {
-    const el = document.getElementById("review");
-    el.href = data.review.trim();
-    el.style.display = "flex";
-}
-
-if (data.instapay && data.instapay.trim() !== "") {
-    const el = document.getElementById("instapay");
-    el.href = "https://ipn.eg/" + data.instapay.trim();
-    el.style.display = "flex";
-}
-
-// فودافون كاش (تم تعديلها لتأخذ اللينك المباشر مباشرة وتفتح تطبيق التحويل)
-if (data.vodafonecash && data.vodafonecash.trim() !== "") {
-    const el = document.getElementById("vodafonecash");
-    el.href = data.vodafonecash.trim();
-    el.style.display = "flex";
-}
-
-// أورنج كاش 
-if (data.orangecash && data.orangecash.trim() !== "") {
-    const el = document.getElementById("orangecash");
-    el.href = data.orangecash.trim(); 
-    el.style.display = "flex";
-}
-
-// اتصالات كاش 
-if (data.etisalatcash && data.etisalatcash.trim() !== "") {
-    const el = document.getElementById("etisalatcash");
-    el.href = data.etisalatcash.trim(); 
-    el.style.display = "flex";
-}
-
-// وي كاش 
-if (data.wecash && data.wecash.trim() !== "") {
-    const el = document.getElementById("wecash");
-    el.href = data.wecash.trim(); 
-    el.style.display = "flex";
-}
-
-
-// معالجة عرض نص الحقوق (الفوتر)
-document.getElementById("footerText").textContent = 
-    (data.footer && data.footer.trim() !== "") ? data.footer : "جميع الحقوق محفوظة ✓";
-
+/* استقبال التصميم من صفحة المعاينة */
+window.addEventListener("message", function(event) {
+    if (event.data.type === "applyDesign") {
+        applyDesign(event.data.design);
+    }
 });
 
-// نظام التصميم الديناميكي
-window.addEventListener("message", function(event){
+/* تحميل البيانات من Firebase */
+db.ref("customers/" + id).once("value")
+.then(function(snapshot){
+    const data = snapshot.val();
 
-    if(!event.data) return;
-
-    if(event.data.type !== "applyDesign") return;
-
-    const design = event.data.design || {};
-
-    // الخط
-    if(design.font){
-        document.body.style.fontFamily = design.font;
+    if(!data){
+        document.querySelector(".card").innerHTML =
+        "<h2 style='color:white'>العميل غير موجود</h2>";
+        document.body.style.opacity = "1";
+        return;
     }
 
-    // لون الأيقونات
-    if(design.iconColor){
-
-        document.querySelectorAll(".custom-icon").forEach(icon=>{
-            icon.style.filter =
-                "drop-shadow(0 0 0 " + design.iconColor + ")";
-        });
+    /* التوجيه المباشر لو موجود ولسنا في وضع المعاينة */
+    if (!preview && data.redirectUrl && data.redirectUrl.trim() !== "") {
+        window.location.replace(data.redirectUrl.trim());
+        return;
     }
 
-    // خلفية الصفحة
-    if(design.bgImage){
+    /* إظهار الصفحة */
+    document.body.style.opacity = "1";
 
-        document.body.style.backgroundImage =
-            `url(${design.bgImage})`;
+    /* معالجة عرض إطار اللوجو */
+    const logoElem = document.getElementById("logo");
+    const logoWrapper = document.getElementById("logoWrapper");
+
+    if (data.logo && data.logo.trim() !== "") {
+        logoElem.src = data.logo;
+        logoWrapper.style.display = "flex";
+    } else {
+        logoWrapper.style.display = "none";
     }
 
-    // خلفية الأزرار
-    if(design.cardImage){
+    document.getElementById("name").textContent = data.name || "";
+    document.getElementById("description").textContent = data.description || "";
 
-        document.querySelectorAll(".btn").forEach(btn=>{
-
-            btn.style.backgroundImage =
-                `url(${design.cardImage})`;
-
-            btn.style.backgroundSize = "cover";
-        });
+    /* ربط وإظهار الأزرار */
+    if (data.phone && data.phone.trim() !== "") {
+        const phoneBtn = document.getElementById("phone");
+        phoneBtn.href = "tel:" + data.phone.trim();
+        phoneBtn.style.display = "flex";
     }
 
-    // شكل الأزرار
-    if(design.cardStyle){
+    if (data.whatsapp && data.whatsapp.trim() !== "") {
+        const el = document.getElementById("whatsapp");
+        let waNum = data.whatsapp.replace(/\D/g, '');
+        el.href = "https://wa.me/" + waNum;
+        el.style.display = "flex";
+    }
 
-        let radius = "18px";
+    if (data.telegram && data.telegram.trim() !== "") {
+        const el = document.getElementById("telegram");
+        el.href = data.telegram.trim();
+        el.style.display = "flex";
+    }
 
-        if(design.cardStyle === "pill")
-            radius = "999px";
+    if (data.messenger && data.messenger.trim() !== "") {
+        const el = document.getElementById("messenger");
+        el.href = data.messenger.trim();
+        el.style.display = "flex";
+    }
 
-        if(design.cardStyle === "square")
-            radius = "0px";
+    if (data.facebook && data.facebook.trim() !== "") {
+        const el = document.getElementById("facebook");
+        el.href = data.facebook.trim();
+        el.style.display = "flex";
+    }
 
-        document.querySelectorAll(".btn").forEach(btn=>{
-            btn.style.borderRadius = radius;
-        });
+    if (data.instagram && data.instagram.trim() !== "") {
+        const el = document.getElementById("instagram");
+        el.href = data.instagram.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.tiktok && data.tiktok.trim() !== "") {
+        const el = document.getElementById("tiktok");
+        el.href = data.tiktok.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.snapchat && data.snapchat.trim() !== "") {
+        const el = document.getElementById("snapchat");
+        el.href = data.snapchat.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.pinterest && data.pinterest.trim() !== "") {
+        const el = document.getElementById("pinterest");
+        el.href = data.pinterest.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.youtube && data.youtube.trim() !== "") {
+        const el = document.getElementById("youtube");
+        el.href = data.youtube.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.linkedin && data.linkedin.trim() !== "") {
+        const el = document.getElementById("linkedin");
+        el.href = data.linkedin.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.website && data.website.trim() !== "") {
+        const el = document.getElementById("website");
+        el.href = data.website.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.catalog && data.catalog.trim() !== "") {
+        const el = document.getElementById("catalog");
+        el.href = data.catalog.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.gmail && data.gmail.trim() !== "") {
+        const el = document.getElementById("gmail");
+        el.href = "mailto:" + data.gmail.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.location && data.location.trim() !== "") {
+        const el = document.getElementById("location");
+        el.href = data.location.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.review && data.review.trim() !== "") {
+        const el = document.getElementById("review");
+        el.href = data.review.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.instapay && data.instapay.trim() !== "") {
+        const el = document.getElementById("instapay");
+        el.href = "https://ipn.eg/" + data.instapay.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.vodafonecash && data.vodafonecash.trim() !== "") {
+        const el = document.getElementById("vodafonecash");
+        el.href = data.vodafonecash.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.orangecash && data.orangecash.trim() !== "") {
+        const el = document.getElementById("orangecash");
+        el.href = data.orangecash.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.etisalatcash && data.etisalatcash.trim() !== "") {
+        const el = document.getElementById("etisalatcash");
+        el.href = data.etisalatcash.trim();
+        el.style.display = "flex";
+    }
+
+    if (data.wecash && data.wecash.trim() !== "") {
+        const el = document.getElementById("wecash");
+        el.href = data.wecash.trim();
+        el.style.display = "flex";
+    }
+
+    /* معالجة عرض نص الحقوق */
+    document.getElementById("footerText").textContent = 
+        (data.footer && data.footer.trim() !== "") ? data.footer : "جميع الحقوق محفوظة ✓";
+
+    /* تطبيق التصميم المخصص إن وجد */
+    if (data.design) {
+        applyDesign(data.design);
     }
 
 });
 
 </script>
-
 
 </body>
 </html>
