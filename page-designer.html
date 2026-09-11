@@ -365,8 +365,38 @@ function updatePagePreview(customerCode){
 
     currentLoadedCode = customerCode;
 
+    const font =
+        encodeURIComponent(document.getElementById("designFontFamily").value);
+
+    const cardStyle =
+        encodeURIComponent(document.getElementById("designCardStyle").value);
+
+    const iconColor =
+        encodeURIComponent(document.getElementById("designIconColor").value);
+
+    const iconsLayout =
+        encodeURIComponent(document.getElementById("designIconsLayout").value);
+
+    const bgImage =
+        encodeURIComponent(backgroundImageData || "");
+
+    const cardImage =
+        encodeURIComponent(buttonBackgroundData || "");
+
+    const coverImage =
+        encodeURIComponent(coverImageData || "");
+
     document.getElementById("previewFrame").src =
-        `qr.html?id=${encodeURIComponent(customerCode)}&t=${Date.now()}`;
+        `qr.html?id=${encodeURIComponent(customerCode)}`
+        + `&preview=1`
+        + `&font=${font}`
+        + `&cardStyle=${cardStyle}`
+        + `&iconColor=${iconColor}`
+        + `&iconsLayout=${iconsLayout}`
+        + `&bgImage=${bgImage}`
+        + `&cardImage=${cardImage}`
+        + `&coverImage=${coverImage}`
+        + `&t=${Date.now()}`;
 }
 
 function triggerLiveUpdate() {
