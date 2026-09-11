@@ -522,6 +522,25 @@ document.getElementById("footerText").textContent =
   
 });  
   
-  
-</script>  </body>  
+</script>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const bgType      = params.get("bgType");
+const bgImage     = params.get("bgImage");
+
+const btnBgType   = params.get("btnBgType");
+const cardImage   = params.get("cardImage");
+
+const coverImage  = params.get("coverImage");
+
+const font        = params.get("font");
+const cardStyle   = params.get("cardStyle");
+
+const iconColor   = params.get("iconColor");
+const iconsLayout = params.get("iconsLayout");
+</script>
+
+</body>  
 </html>
