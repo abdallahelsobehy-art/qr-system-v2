@@ -256,136 +256,13 @@ object-fit:cover;
 
     <!-- أدوات التخصيص -->
     <div class="designer-panel">
-
-        <!-- 1. تخصيص الألوان الأساسية والخلفية -->
-        <div class="designer-card">
-            <h3><i class="fa-solid fa-palette"></i> ألوان الهوية والخلفية</h3>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>لون الخلفية العامة</label>
-                    <input type="color" id="designBgColor" value="#f8fafc" oninput="triggerLiveUpdate()">
-                </div>
-                <div class="form-group">
-                    <label>اللون الرئيسي (Primary)</label>
-                    <input type="color" id="designPrimaryColor" value="#111111" oninput="triggerLiveUpdate()">
-                </div>
-            </div>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>لون النصوص</label>
-                    <input type="color" id="designTextColor" value="#2d3748" oninput="triggerLiveUpdate()">
-                </div>
-                <div class="form-group">
-                    <label>لون كروت التواصل</label>
-                    <input type="color" id="designCardBgColor" value="#ffffff" oninput="triggerLiveUpdate()">
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. الخطوط ونمط العرض -->
-        <div class="designer-card">
-            <h3><i class="fa-solid fa-font"></i> الخطوط والنمط البصري</h3>
-            <div class="form-group">
-                <label>نوع خط الكتابة</label>
-                <select id="designFontFamily" onchange="triggerLiveUpdate()">
-                    <option value="'Cairo', sans-serif" selected>خط كايرو (Cairo)</option>
-                    <option value="'Tajawal', sans-serif">خط تجوال (Tajawal)</option>
-                    <option value="'Changa', sans-serif">خط شانجا (Changa)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>شكل أزرار التواصل</label>
-                <input type="hidden" id="designCardStyle" value="rounded">
-                <div class="options-grid">
-                    <div class="option-box active" onclick="selectDesignOption('designCardStyle', 'rounded', this)" title="دائري ناعم">نصف دائرى</div>
-                    <div class="option-box" onclick="selectDesignOption('designCardStyle', 'pill', this)" title="كبسولة">كبسولة</div>
-                    <div class="option-box" onclick="selectDesignOption('designCardStyle', 'square', this)" title="مربع زوايا حادة">مربع</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. تأثيرات بصرية ومظهر الأيقونات -->
-        <div class="designer-card">
-            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> شكل الأيقونات والمظهر</h3>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>لون أيقونات التواصل</label>
-                    <input type="color" id="designIconColor" value="#3b82f6" oninput="triggerLiveUpdate()">
-                </div>
-                <div class="form-group">
-                    <label>نمط عرض الأيقونات</label>
-                    <select id="designIconsLayout" onchange="triggerLiveUpdate()">
-                        <option value="grid" selected>شبكة (Grid مرتين بجوار بعض)</option>
-                        <option value="list">قائمة عمودية (List تحت بعض)</option>
-                    </select>
-                </div>
-            </div>
-
-            <button class="btn btn-save-design" onclick="saveDesignSettings()"><i class="fa-solid fa-floppy-disk"></i> حفظ إعدادات التصميم</button>
-        </div>
-
-        <!-- 4. خلفيات الصفحة (صور) -->
-        <div class="designer-card">
-            <h3><i class="fa-solid fa-image"></i> الخلفيات (صور)</h3>
-
-            <div class="form-group">
-                <label>خلفية الصفحة الكاملة</label>
-                <div class="file-row">
-                    <label class="btn-file" for="bgImageInput"><i class="fa-solid fa-upload"></i> اختيار ملف</label>
-                    <input type="file" id="bgImageInput" accept="image/*" onchange="handleBgImageUpload(this)">
-                    <input type="text" id="bgImageUrl" placeholder="أو ضع رابط صورة https://..." oninput="handleBgImageUrl(this.value)">
-                </div>
-                <img id="bgImagePreview" class="bg-preview" alt="معاينة خلفية الصفحة">
-            </div>
-
-            <div class="form-group">
-                <label>خلفية كروت الأيقونات</label>
-                <div class="file-row">
-                    <label class="btn-file" for="cardImageInput"><i class="fa-solid fa-upload"></i> اختيار ملف</label>
-                    <input type="file" id="cardImageInput" accept="image/*" onchange="handleCardImageUpload(this)">
-                    <input type="text" id="cardImageUrl" placeholder="أو ضع رابط صورة https://..." oninput="handleCardImageUrl(this.value)">
-                </div>
-                <img id="cardImagePreview" class="bg-preview" alt="معاينة خلفية الكروت">
-            </div>
-
-            <p style="font-size:12px;color:#718096;margin-top:5px;">
-                <i class="fa-solid fa-circle-info"></i>
-                التغييرات بتظهر فوراً في المعاينة على الموبايل من غير ما تضغط حفظ.
-            </p>
-        </div>
-
+        <!-- جاهز للإضافة -->
     </div>
 
 </div>
 
 <script>
 let currentLoadedCode = "";
-let bgImageData = "";
-let cardImageData = "";
-
-/* تجميع إعدادات التصميم الحالية */
-function collectDesign() {
-    return {
-        bg: document.getElementById("designBgColor").value,
-        primary: document.getElementById("designPrimaryColor").value,
-        text: document.getElementById("designTextColor").value,
-        cardBg: document.getElementById("designCardBgColor").value,
-        font: document.getElementById("designFontFamily").value,
-        cardStyle: document.getElementById("designCardStyle").value,
-        iconColor: document.getElementById("designIconColor").value,
-        iconsLayout: document.getElementById("designIconsLayout").value,
-        bgImage: bgImageData,
-        cardImage: cardImageData
-    };
-}
-
-/* إرسال التصميم الحي لصفحة المعاينة بدون إعادة تحميل (PostMessage) */
-function sendDesignToPreview() {
-    const iframe = document.getElementById("previewFrame");
-    if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage({ type: "applyDesign", design: collectDesign() }, "*");
-    }
-}
 
 /* تحميل صفحة المعاينة لعميل معين مع تمرير وضع المعاينة preview=1 لمنع التحويل */
 function updatePagePreview(customerCode){
@@ -394,123 +271,6 @@ function updatePagePreview(customerCode){
 
     const iframe = document.getElementById("previewFrame");
     iframe.src = `qr.html?id=${encodeURIComponent(customerCode)}&preview=1&t=${Date.now()}`;
-}
-
-/* أي تغيير في الأدوات بيظهر فوراً في المعاينة من غير حفظ ولا سكان */
-function triggerLiveUpdate() {
-    sendDesignToPreview();
-}
-
-/* ضغط الصور وتصغيرها قبل الإرسال/التخزين */
-function compressImage(file, callback) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const maxDim = 1200;
-            let w = img.width, h = img.height;
-            if (w > maxDim || h > maxDim) {
-                const ratio = Math.min(maxDim / w, maxDim / h);
-                w = Math.round(w * ratio);
-                h = Math.round(h * ratio);
-            }
-            const canvas = document.createElement("canvas");
-            canvas.width = w;
-            canvas.height = h;
-            canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-            callback(canvas.toDataURL("image/jpeg", 0.82));
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-function setBgPreview(previewId, url) {
-    const p = document.getElementById(previewId);
-    if (p) {
-        p.src = url || "";
-        p.style.display = url ? "block" : "none";
-    }
-}
-
-function handleBgImageUpload(input) {
-    if (input.files && input.files[0]) {
-        compressImage(input.files[0], function(dataUrl) {
-            bgImageData = dataUrl;
-            document.getElementById("bgImageUrl").value = "";
-            setBgPreview("bgImagePreview", dataUrl);
-            sendDesignToPreview();
-        });
-    }
-}
-
-function handleBgImageUrl(value) {
-    bgImageData = value.trim();
-    setBgPreview("bgImagePreview", bgImageData);
-    sendDesignToPreview();
-}
-
-function handleCardImageUpload(input) {
-    if (input.files && input.files[0]) {
-        compressImage(input.files[0], function(dataUrl) {
-            cardImageData = dataUrl;
-            document.getElementById("cardImageUrl").value = "";
-            setBgPreview("cardImagePreview", dataUrl);
-            sendDesignToPreview();
-        });
-    }
-}
-
-function handleCardImageUrl(value) {
-    cardImageData = value.trim();
-    setBgPreview("cardImagePreview", cardImageData);
-    sendDesignToPreview();
-}
-
-function selectDesignOption(hiddenId, value, element) {
-    document.getElementById(hiddenId).value = value;
-    const parentGrid = element.parentElement;
-    parentGrid.querySelectorAll('.option-box').forEach(box => box.classList.remove('active'));
-    element.classList.add('active');
-    triggerLiveUpdate();
-}
-
-function saveDesignSettings() {
-    if (!currentLoadedCode) {
-        alert("لا يوجد عميل محدد لحفظ إعدادات التصميم الخاصة به.");
-        return;
-    }
-
-    // تجميع إعدادات التصميم لحفظها في قاعدة البيانات تحت العميل
-    const designData = {
-        bgColor: document.getElementById("designBgColor").value,
-        primaryColor: document.getElementById("designPrimaryColor").value,
-        textColor: document.getElementById("designTextColor").value,
-        cardBgColor: document.getElementById("designCardBgColor").value,
-        fontFamily: document.getElementById("designFontFamily").value,
-        cardStyle: document.getElementById("designCardStyle").value,
-        iconColor: document.getElementById("designIconColor").value,
-        iconsLayout: document.getElementById("designIconsLayout").value,
-        bgImage: bgImageData,
-        cardImage: cardImageData
-    };
-
-    // التواصل مع الـ Firebase عبر الـ parent (لوحة التحكم الرئيسية) لحفظ التخصيص
-    try {
-        const parentWindow = window.parent;
-        if (parentWindow && parentWindow.db) {
-            parentWindow.db.ref("customers/" + currentLoadedCode + "/design").set(designData)
-            .then(() => {
-                alert("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!");
-            })
-            .catch(err => {
-                alert("حدث خطأ أثناء الحفظ: " + err.message);
-            });
-        }
-    } catch (e) {
-        console.log("Database connection error:", e);
-        alert("تم تطبيق التصميم محلياً بنجاح.");
-    }
 }
 
 /* جلب الكود من صفحة الأدمن تلقائياً ومزامنة البيانات */
@@ -523,12 +283,10 @@ function syncWithAdmin(){
 
         if(codeInput.value){
             updatePagePreview(codeInput.value);
-            loadCustomerDesign(codeInput.value);
         }
 
         codeInput.addEventListener("input", function(){
             updatePagePreview(this.value);
-            loadCustomerDesign(this.value);
         });
 
         const customerSelect = parentDoc.getElementById("customerSelect");
@@ -538,7 +296,6 @@ function syncWithAdmin(){
                     const currentCode = parentDoc.getElementById("code").value;
                     if (currentCode) {
                         updatePagePreview(currentCode);
-                        loadCustomerDesign(currentCode);
                     }
                 }, 500);
             });
@@ -548,49 +305,7 @@ function syncWithAdmin(){
     }
 }
 
-function loadCustomerDesign(code) {
-    try {
-        const parentWindow = window.parent;
-        if (parentWindow && parentWindow.db) {
-            parentWindow.db.ref("customers/" + code + "/design").once("value").then(snapshot => {
-                const design = snapshot.val();
-                if (design) {
-                    if(design.bgColor) document.getElementById("designBgColor").value = design.bgColor;
-                    if(design.primaryColor) document.getElementById("designPrimaryColor").value = design.primaryColor;
-                    if(design.textColor) document.getElementById("designTextColor").value = design.textColor;
-                    if(design.cardBgColor) document.getElementById("designCardBgColor").value = design.cardBgColor;
-                    if(design.fontFamily) document.getElementById("designFontFamily").value = design.fontFamily;
-                    if(design.cardStyle) document.getElementById("designCardStyle").value = design.cardStyle;
-                    if(design.iconColor) document.getElementById("designIconColor").value = design.iconColor;
-                    if(design.iconsLayout) document.getElementById("designIconsLayout").value = design.iconsLayout;
-
-                    // استرجاع صور الخلفيات المحفوظة
-                    bgImageData = design.bgImage || "";
-                    cardImageData = design.cardImage || "";
-                    document.getElementById("bgImageUrl").value =
-                        (bgImageData && !bgImageData.startsWith("data:")) ? bgImageData : "";
-                    document.getElementById("cardImageUrl").value =
-                        (cardImageData && !cardImageData.startsWith("data:")) ? cardImageData : "";
-                    setBgPreview("bgImagePreview", bgImageData);
-                    setBgPreview("cardImagePreview", cardImageData);
-
-                    sendDesignToPreview();
-                }
-            });
-        }
-    } catch(e) {
-        console.log("Could not load design from DB", e);
-    }
-}
-
 window.onload = function(){
-    // بعد تحميل صفحة المعاينة: ابعت لها التصميم الحالي فوراً
-    const previewFrame = document.getElementById("previewFrame");
-    if (previewFrame) {
-        previewFrame.addEventListener("load", function() {
-            sendDesignToPreview();
-        });
-    }
     syncWithAdmin();
 };
 </script>
