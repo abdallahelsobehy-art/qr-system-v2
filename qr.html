@@ -583,6 +583,30 @@ window.addEventListener("load", () => {
         document.body.style.fontFamily = font;
     }
 
+    /* خلفية الصفحة */
+    if(bgImage){
+        document.body.style.backgroundImage =
+        `url('${bgImage}')`;
+
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+    }
+
+    /* خلفية الأزرار */
+    if(cardImage){
+
+        document.querySelectorAll(".btn").forEach(btn=>{
+
+            btn.style.backgroundImage =
+            `url('${cardImage}')`;
+
+            btn.style.backgroundSize = "cover";
+            btn.style.backgroundPosition = "center";
+
+        });
+
+    }
+
     /* صورة الغلاف */
     if(coverImage){
         const logoWrapper = document.getElementById("logoWrapper");
