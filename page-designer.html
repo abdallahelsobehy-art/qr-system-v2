@@ -250,7 +250,8 @@ object-fit:cover;
     <!-- شاشة المعاينة -->
     <div class="preview-container">
         <div class="phone-frame">
-            <iframe id="previewFrame" src="qr.html"></iframe>
+            <!-- تم تعديل اسم الملف هنا إلى صفحة عرض بيانات العميل الفعلية (يمكنك تغيير customer.html بالاسم المطابق عندك إذا اختلف) -->
+            <iframe id="previewFrame" src="customer.html"></iframe>
         </div>
     </div>
 
@@ -387,14 +388,14 @@ function sendDesignToPreview() {
     }
 }
 
-/* تحميل صفحة المعاينة لعميل معين (أول مرة أو عند تغيير العميل) */
+/* تحميل صفحة المعاينة لعميل معين (توجيهها لملف العميل الفعلي مع تفعيل وضع المعاينة preview=1) */
 function updatePagePreview(customerCode){
     if(!customerCode) return;
     currentLoadedCode = customerCode;
 
     const iframe = document.getElementById("previewFrame");
-    // preview=1 مهم جداً: يمنع صفحة العميل من التحويل لرابط redirectUrl الخارجي
-    iframe.src = `qr.html?id=${encodeURIComponent(customerCode)}&preview=1&t=${Date.now()}`;
+    // استبدل customer.html باسم الملف الفعلي لواجهة العميل إذا كان مختلفاً لديك (مثلاً index.html أو qr.html للعملاء)
+    iframe.src = `customer.html?id=${encodeURIComponent(customerCode)}&preview=1&t=${Date.now()}`;
 }
 
 /* أي تغيير في الأدوات بيظهر فوراً في المعاينة من غير حفظ ولا سكان */
