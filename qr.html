@@ -245,6 +245,8 @@ function applyLiveDesign(designObj) {
     const text = liveDesign.text || designObj.text;  
     const font = liveDesign.font || designObj.font;  
     const cardBg = liveDesign.cardBg || designObj.cardBg;  
+    const cardStyle = liveDesign.cardStyle || designObj.cardStyle;
+    const iconColor = liveDesign.iconColor || designObj.iconColor;
   
     if (bg) {  
         document.body.style.background = bg;  
@@ -289,6 +291,46 @@ function applyLiveDesign(designObj) {
             btn.style.backgroundSize = "cover";  
         });  
     }  
+
+    /* نوع الخط */
+    if(font){
+        document.body.style.fontFamily = font;
+    }
+
+    /* شكل الأزرار */
+    if(cardStyle){
+
+        document.querySelectorAll(".btn").forEach(btn=>{
+
+            btn.classList.remove("style-rounded","style-pill","style-square");
+
+            if(cardStyle==="rounded"){
+                btn.style.borderRadius="18px";
+            }
+
+            if(cardStyle==="pill"){
+                btn.style.borderRadius="999px";
+            }
+
+            if(cardStyle==="square"){
+                btn.style.borderRadius="0";
+            }
+
+        });
+
+    }
+
+    /* لون الأيقونات */
+    if(iconColor){
+
+        document.querySelectorAll(".custom-icon").forEach(icon=>{
+
+            icon.style.filter=
+            "drop-shadow(0 0 0 "+iconColor+")";
+
+        });
+
+    }
 }  
   
 db.ref("customers/" + id).on("value", function(snapshot){  
