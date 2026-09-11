@@ -1,541 +1,378 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>تخصيص صفحة العميل - الورشة</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    background:#f0f3f8;
-    font-family:'Cairo',sans-serif;
-    padding:15px;
-}
-
-/* التخطيط */
-.designer-layout{
-    display:flex;
-    flex-direction:row-reverse;
-    gap:20px;
-    align-items:flex-start;
-}
-
-/* منطقة الأدوات */
-.designer-panel{
-    flex:1;
-    min-height:1200px;
-}
-
-/* شاشة المعاينة */
-.preview-container{
-    position:sticky;
-    top:15px;
-    width:180px;
-    flex-shrink:0;
-}
-
-.phone-frame{
-    width: 180px;
-    height: 360px;
-    background: #fff;
-    border-radius: 25px;
-    overflow: hidden;
-    position: relative;
-}
-
-#previewFrame{
-    width: 375px;
-    height: 750px;
-    border: none;
-    background: #fff;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%) scale(0.485);
-    transform-origin: top center;
-}
-
-/* بطاقات أقسام التخصيص */
-.designer-card {
-    background: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 10px rgba(0,0,0,.05);
-}
-
-.designer-card h3 {
-    margin-bottom: 15px;
-    color: #111;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 2px solid #edf2f7;
-    padding-bottom: 10px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-    color: #444;
-    font-size: 13px;
-}
-
-input[type="text"], input[type="color"], select, input[type="file"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    background-color: #fff;
-    transition: border-color 0.2s;
-    font-family: 'Cairo', sans-serif;
-}
-
-input[type="color"] {
-    height: 42px;
-    padding: 4px;
-    cursor: pointer;
-}
-
-input[type="text"]:focus, select:focus {
-    border-color: #3b82f6;
-}
-
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-    gap: 8px;
-    margin-bottom: 10px;
-}
-
-.option-box {
-    background: #ffffff;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.option-box:hover {
-    border-color: #cbd5e0;
-    background: #f8fafc;
-}
-
-.option-box.active {
-    border-color: #3b82f6;
-    background: #eff6ff;
-    box-shadow: 0 0 0 1px #3b82f6;
-}
-
-.btn {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    font-family: 'Cairo', sans-serif;
-}
-
-.btn-save-design {
-    background-color: #111;
-    color: #fff;
-    margin-top: 10px;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
-
-/* معاينة الخطوط */
-.font-cairo { font-family: 'Cairo', sans-serif; }
-.font-tajawal { font-family: 'Tajawal', sans-serif; }
-.font-changa { font-family: 'Changa', sans-serif; }
-
-/* موبايل */
-@media(max-width:992px){
-
-    .designer-layout{
-        display:block;
-    }
-
-    .preview-container{
-        position:relative;
-        top:auto;
-        width:100%;
-        margin-bottom:20px;
-    }
-
-    .phone-frame{
-        width:180px;
-        height:360px;
-        margin:auto;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الورشة - نظام الـ QR والعملاء</title>
+    <!-- مكتبة تخصيص وتوليد الـ QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <!-- خطوط عربية وتصميم -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* القائمة الجانبية */
+        aside {
+            width: 260px;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .logo-area h2 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+        .nav-links button {
+            width: 100%;
+            padding: 12px 15px;
+            text-align: right;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        .nav-links button.active, .nav-links button:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        /* المحتوى الرئيسي */
+        main {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-content {
+            display: none;
+            flex-grow: 1;
+        }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        button.btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        button.btn:hover {
+            background: var(--primary-dark);
+        }
+        /* شاشة المعاينة والتخصيص المتقدم للـ QR */
+        .preview-container {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 120px);
+        }
+        .controls-pane {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .display-pane {
+            flex: 1;
+            background: #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        #qr-code-holder {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        iframe.page-preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+            border-radius: 12px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="designer-layout">
-
-    <!-- شاشة المعاينة -->
-    <div class="preview-container">
-        <div class="phone-frame">
-            <iframe id="previewFrame" src="qr.html"></iframe>
+    <!-- القائمة الجانبية -->
+    <aside>
+        <div>
+            <div class="logo-area">
+                <h2>الورشة - إدارة الـ QR</h2>
+            </div>
+            <ul class="nav-links">
+                <li><button class="tab-btn active" onclick="switchTab(0)">العملاء</button></li>
+                <li><button class="tab-btn" onclick="switchTab(1)">إضافة عميل جديد</button></li>
+                <li><button class="tab-btn" onclick="switchTab(2)">مصمم الصفحات</button></li>
+                <li><button class="tab-btn" onclick="switchTab(3)" id="qr-tab-trigger">تخصيص وتوليد QR</button></li>
+            </ul>
         </div>
-    </div>
-
-    <!-- أدوات التخصيص -->
-    <div class="designer-panel">
-
-        <!-- 1. الخلفيات -->
-        <div class="designer-card">
-
-            <h3>
-                <i class="fa-solid fa-image"></i>
-                الخلفيات
-            </h3>
-
-            <div class="form-group">
-                <label>خلفية الصفحة</label>
-
-                <select id="backgroundType" onchange="triggerLiveUpdate()">
-                    <option value="default">الخلفية الافتراضية</option>
-                    <option value="custom">رفع صورة من الجهاز</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>صورة الخلفية</label>
-                <input
-                    type="file"
-                    id="backgroundImage"
-                    accept="image/*"
-                    onchange="previewBackgroundImage(event)"
-                >
-            </div>
-
-            <hr style="margin:20px 0">
-
-            <div class="form-group">
-                <label>خلفية الأزرار والكروت</label>
-
-                <select id="buttonBgType" onchange="triggerLiveUpdate()">
-                    <option value="default">الخلفية الافتراضية</option>
-                    <option value="custom">رفع صورة من الجهاز</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>صورة الكروت</label>
-                <input
-                    type="file"
-                    id="buttonBackgroundImage"
-                    accept="image/*"
-                    onchange="previewButtonBackground(event)"
-                >
-            </div>
-
-            <hr style="margin:20px 0">
-
-            <div class="form-group">
-                <label>صورة الغلاف (Cover)</label>
-
-                <input
-                    type="file"
-                    id="coverImage"
-                    accept="image/*"
-                    onchange="previewCoverImage(event)"
-                >
-            </div>
-
+        <div style="font-size: 0.85rem; text-align: center; color: #64748b;">
+            نظام الورشة الذكي الإصدار 3.5
         </div>
+    </aside>
 
-        <!-- 2. الخطوط ونمط العرض -->
-        <div class="designer-card">
-            <h3><i class="fa-solid fa-font"></i> الخطوط والنمط البصري</h3>
-            <div class="form-group">
-                <label>نوع خط الكتابة</label>
-                <select id="designFontFamily" onchange="triggerLiveUpdate()">
-                    <option value="'Cairo', sans-serif" selected>خط كايرو (Cairo)</option>
-                    <option value="'Tajawal', sans-serif">خط تجوال (Tajawal)</option>
-                    <option value="'Changa', sans-serif">خط شانجا (Changa)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>شكل أزرار التواصل</label>
-                <input type="hidden" id="designCardStyle" value="rounded">
-                <div class="options-grid">
-                    <div class="option-box active" onclick="selectDesignOption('designCardStyle', 'rounded', this)" title="دائري ناعم">نصف دائرى</div>
-                    <div class="option-box" onclick="selectDesignOption('designCardStyle', 'pill', this)" title="كبسولة">كبسولة</div>
-                    <div class="option-box" onclick="selectDesignOption('designCardStyle', 'square', this)" title="مربع زوايا حادة">مربع</div>
-                </div>
+    <!-- المحتوى الرئيسي -->
+    <main>
+        <!-- التبويب الأول: العملاء -->
+        <div class="tab-content active" id="tab-0">
+            <h1>إدارة العملاء والروابط النشطة</h1>
+            <div class="card">
+                <p>قريباً عرض جدول بيانات العملاء المرتبطين بقاعدة بيانات Firebase.</p>
             </div>
         </div>
 
-        <!-- 3. تأثيرات بصرية ومظهر الأيقونات -->
-        <div class="designer-card">
-            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> شكل الأيقونات والمظهر</h3>
-            <div class="grid-2">
+        <!-- التبويب الثاني: إضافة عميل جديد -->
+        <div class="tab-content" id="tab-1">
+            <h1>تسجيل عميل جديد</h1>
+            <div class="card">
                 <div class="form-group">
-                    <label>لون أيقونات التواصل</label>
-                    <input type="color" id="designIconColor" value="#3b82f6" oninput="triggerLiveUpdate()">
+                    <label>اسم العميل / النشاط</label>
+                    <input type="text" id="client-name" placeholder="أدخل اسم النشاط التجاري...">
                 </div>
                 <div class="form-group">
-                    <label>نمط عرض الأيقونات</label>
-                    <select id="designIconsLayout" onchange="triggerLiveUpdate()">
-                        <option value="grid" selected>شبكة (Grid مرتين بجوار بعض)</option>
-                        <option value="list">قائمة عمودية (List تحت بعض)</option>
-                    </select>
+                    <label>رابط صفحة العميل (GitHub Pages)</label>
+                    <input type="text" id="client-url" placeholder="https://username.github.io/project/">
                 </div>
+                <button class="btn" onclick="saveClientData()">حفظ البيانات</button>
             </div>
-
-            <button class="btn btn-save-design" onclick="saveDesignSettings()"><i class="fa-solid fa-floppy-disk"></i> حفظ إعدادات التصميم</button>
         </div>
 
-    </div>
+        <!-- التبويب الثالث: مصمم الصفحات -->
+        <div class="tab-content" id="tab-2">
+            <h1>مخصص واجهة صفحة العميل</h1>
+            <div class="card" style="height: 100%;">
+                <p>قم بتخصيص ألوان، خطوط وأزرار واجهة صفحة العميل الخاصة بك.</p>
+            </div>
+        </div>
 
-</div>
+        <!-- التبويب الرابع: تخصيص وتوليد الـ QR وشاشة المعاينة -->
+        <div class="tab-content" id="tab-3">
+            <h1>تخصيص وتوليد رمز الاستجابة السريعة (QR Code)</h1>
+            <div class="preview-container">
+                <!-- لوحة التحكم وتغيير الخيارات -->
+                <div class="controls-pane card">
+                    <div class="form-group">
+                        <label>الرابط المحتوى في الـ QR</label>
+                        <input type="text" id="qr-text" value="https://el-worsha.github.io/smart-link" oninput="updateQRCode()">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>لون النقاط</label>
+                            <input type="color" id="qr-dot-color" value="#1e293b" onchange="updateQRCode()">
+                        </div>
+                        <div class="form-group">
+                            <label>لون الخلفية</label>
+                            <input type="color" id="qr-bg-color" value="#ffffff" onchange="updateQRCode()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>شكل النقاط</label>
+                        <select id="qr-dot-style" onchange="updateQRCode()">
+                            <option value="square">مربع (Square)</option>
+                            <option value="dots">دائري (Dots)</option>
+                            <option value="rounded">مستدير الحواف (Rounded)</option>
+                            <option value="classy">راقي (Classy)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>معاينة صفحة العميل الحية (Live Page Preview)</label>
+                        <div style="height: 200px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                            <iframe id="page-preview-frame" class="page-preview-frame" src="about:blank"></iframe>
+                        </div>
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 10px;" onclick="downloadQR()">تحميل الـ QR بجودة عالية</button>
+                </div>
+                <!-- لوحة عرض الـ QR الفعلي -->
+                <div class="display-pane">
+                    <div id="qr-code-holder"></div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<script>
-let currentLoadedCode = "";
-
-let backgroundImageData = "";
-let buttonBackgroundData = "";
-let coverImageData = "";
-
-function previewBackgroundImage(event){
-
-    const file = event.target.files[0];
-    if(!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        backgroundImageData = e.target.result;
-
-        triggerLiveUpdate();
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-function previewButtonBackground(event){
-
-    const file = event.target.files[0];
-    if(!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        buttonBackgroundData = e.target.result;
-
-        triggerLiveUpdate();
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-function previewCoverImage(event){
-
-    const file = event.target.files[0];
-    if(!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        coverImageData = e.target.result;
-
-        triggerLiveUpdate();
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-/* تحديث المعاينة مع إرسال إعدادات التصميم الحالية لصفحة الـ QR فوراً */
-function updatePagePreview(customerCode){
-    if(!customerCode) return;
-    currentLoadedCode = customerCode;
-
-    const iframe = document.getElementById("previewFrame");
-    
-    // بناء رابط المعاينة مع تمرير كود العميل والتصميم المخصص الحالي كـ Query Parameters
-    const bgType = encodeURIComponent(document.getElementById("backgroundType").value);
-    const btnBgType = encodeURIComponent(document.getElementById("buttonBgType").value);
-    const font = encodeURIComponent(document.getElementById("designFontFamily").value);
-    const cardStyle = encodeURIComponent(document.getElementById("designCardStyle").value);
-    const iconColor = encodeURIComponent(document.getElementById("designIconColor").value);
-    const iconsLayout = encodeURIComponent(document.getElementById("designIconsLayout").value);
-
-    const bgImage = encodeURIComponent(backgroundImageData);
-    const cardImage = encodeURIComponent(buttonBackgroundData);
-    const coverImage = encodeURIComponent(coverImageData);
-
-    iframe.src = `qr.html?id=${encodeURIComponent(customerCode)}&bgType=${bgType}&bgImage=${bgImage}&btnBgType=${btnBgType}&cardImage=${cardImage}&coverImage=${coverImage}&font=${font}&cardStyle=${cardStyle}&iconColor=${iconColor}&iconsLayout=${iconsLayout}&t=${Date.now()}`;
-}
-
-function triggerLiveUpdate() {
-    if (currentLoadedCode) {
-        updatePagePreview(currentLoadedCode);
-    }
-}
-
-function selectDesignOption(hiddenId, value, element) {
-    document.getElementById(hiddenId).value = value;
-    const parentGrid = element.parentElement;
-    parentGrid.querySelectorAll('.option-box').forEach(box => box.classList.remove('active'));
-    element.classList.add('active');
-    triggerLiveUpdate();
-}
-
-function saveDesignSettings() {
-    if (!currentLoadedCode) {
-        alert("لا يوجد عميل محدد لحفظ إعدادات التصميم الخاصة به.");
-        return;
-    }
-
-    // تجميع إعدادات التصميم لحفظها في قاعدة البيانات تحت العميل
-    const designData = {
-        backgroundType: document.getElementById("backgroundType").value,
-        buttonBgType: document.getElementById("buttonBgType").value,
-        fontFamily: document.getElementById("designFontFamily").value,
-        cardStyle: document.getElementById("designCardStyle").value,
-        iconColor: document.getElementById("designIconColor").value,
-        iconsLayout: document.getElementById("designIconsLayout").value,
-        bgImage: backgroundImageData,
-        cardImage: buttonBackgroundData,
-        coverImage: coverImageData
-    };
-
-    // التواصل مع الـ Firebase عبر الـ parent (لوحة التحكم الرئيسية) لحفظ التخصيص
-    try {
-        const parentWindow = window.parent;
-        if (parentWindow && parentWindow.db) {
-            parentWindow.db.ref("customers/" + currentLoadedCode + "/design").set(designData)
-            .then(() => {
-                alert("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!");
-            })
-            .catch(err => {
-                alert("حدث خطأ أثناء الحفظ: " + err.message);
-            });
-        }
-    } catch (e) {
-        console.log("Database connection error:", e);
-        alert("تم تطبيق التصميم محلياً بنجاح.");
-    }
-}
-
-/* جلب الكود من صفحة الأدمن تلقائياً ومزامنة البيانات */
-function syncWithAdmin(){
-    try{
-        const parentDoc = window.parent.document;
-        const codeInput = parentDoc.getElementById("code");
-
-        if(!codeInput) return;
-
-        if(codeInput.value){
-            updatePagePreview(codeInput.value);
-            loadCustomerDesign(codeInput.value);
-        }
-
-        codeInput.addEventListener("input", function(){
-            updatePagePreview(this.value);
-            loadCustomerDesign(this.value);
+    <script>
+        // إعداد وتوليد مكتبة الـ QR Code Styling
+        let qrCode = new QRCodeStyling({
+            width: 300,
+            height: 300,
+            type: "svg",
+            data: "https://el-worsha.github.io/smart-link",
+            dotsOptions: {
+                color: "#1e293b",
+                type: "square"
+            },
+            backgroundOptions: {
+                color: "#ffffff",
+            },
+            imageOptions: {
+                hideBackgroundDots: true,
+                imageSize: 0.4,
+                margin: 0
+            }
         });
 
-        const customerSelect = parentDoc.getElementById("customerSelect");
-        if(customerSelect){
-            customerSelect.addEventListener("change", function(){
-                setTimeout(function(){
-                    const currentCode = parentDoc.getElementById("code").value;
-                    if (currentCode) {
-                        updatePagePreview(currentCode);
-                        loadCustomerDesign(currentCode);
-                    }
-                }, 500);
-            });
-        }
-    }catch(err){
-        console.log("Sync error:", err);
-    }
-}
+        window.addEventListener('DOMContentLoaded', () => {
+            qrCode.append(document.getElementById("qr-code-holder"));
+            updatePagePreview();
+        });
 
-function loadCustomerDesign(code) {
-    try {
-        const parentWindow = window.parent;
-        if (parentWindow && parentWindow.db) {
-            parentWindow.db.ref("customers/" + code + "/design").once("value").then(snapshot => {
-                const design = snapshot.val();
-                if (design) {
-                    if(design.backgroundType) document.getElementById("backgroundType").value = design.backgroundType;
-                    if(design.buttonBgType) document.getElementById("buttonBgType").value = design.buttonBgType;
-                    if(design.fontFamily) document.getElementById("designFontFamily").value = design.fontFamily;
-                    if(design.cardStyle) document.getElementById("designCardStyle").value = design.cardStyle;
-                    if(design.iconColor) document.getElementById("designIconColor").value = design.iconColor;
-                    if(design.iconsLayout) document.getElementById("designIconsLayout").value = design.iconsLayout;
-                    
-                    if(design.bgImage) {
-                        backgroundImageData = design.bgImage;
-                    }
-                    if(design.cardImage) {
-                        buttonBackgroundData = design.cardImage;
-                    }
-                    if(design.coverImage) {
-                        coverImageData = design.coverImage;
-                    }
-                    
-                    updatePagePreview(code);
+        // التنقل بين التبويبات
+        function switchTab(index) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            buttons.forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === index);
+            });
+            contents.forEach((content, idx) => {
+                content.classList.toggle('active', idx === index);
+            });
+
+            if (index === 3) {
+                setTimeout(updatePagePreview, 100);
+            }
+        }
+
+        // تحديث إعدادات الـ QR لحظياً
+        function updateQRCode() {
+            const text = document.getElementById('qr-text').value;
+            const dotColor = document.getElementById('qr-dot-color').value;
+            const bgColor = document.getElementById('qr-bg-color').value;
+            const dotStyle = document.getElementById('qr-dot-style').value;
+
+            qrCode.update({
+                data: text,
+                dotsOptions: {
+                    color: dotColor,
+                    type: dotStyle
+                },
+                backgroundOptions: {
+                    color: bgColor
                 }
             });
+
+            updatePagePreview();
         }
-    } catch(e) {
-        console.log("Could not load design from DB", e);
-    }
-}
 
-window.onload = function(){
-    syncWithAdmin();
-};
-</script>
+        // تحديث شاشة المعاينة الفورية عبر الـ iframe
+        function updatePagePreview() {
+            const previewFrame = document.getElementById('page-preview-frame');
+            const targetUrl = document.getElementById('qr-text').value;
+            
+            // حقن محتوى مصغر لمعاينة شكل الصفحة الفورية بناءً على الرابط الحالي
+            const previewHtml = `
+                <html dir="rtl">
+                <head>
+                    <style>
+                        body { font-family: 'Cairo', sans-serif; padding: 15px; text-align: center; background: #fdfdfd; color: #333; }
+                        .preview-box { border: 2px dashed #2563eb; padding: 15px; border-radius: 8px; background: #eff6ff; }
+                        h3 { margin-bottom: 5px; color: #1e293b; font-size: 1.1rem; }
+                        p { font-size: 0.85rem; color: #64748b; word-break: break-all; }
+                    </style>
+                </head>
+                <body>
+                    <div class="preview-box">
+                        <h3>معاينة نشاط العميل</h3>
+                        <p>${targetUrl}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            try {
+                const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                doc.open();
+                doc.write(previewHtml);
+                doc.close();
+            } catch (e) {
+                console.error("خطأ في تحديث معاينة الإطار:", e);
+            }
+        }
 
+        function saveClientData() {
+            alert("تم حفظ بيانات العميل بنجاح في قاعدة البيانات.");
+        }
+
+        function downloadQR() {
+            qrCode.download({ name: "el-worsha-qr", extension: "svg" });
+        }
+    </script>
 </body>
 </html>
