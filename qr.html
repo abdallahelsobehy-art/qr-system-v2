@@ -541,6 +541,59 @@ const cardStyle   = params.get("cardStyle");
 const iconColor   = params.get("iconColor");
 const iconsLayout = params.get("iconsLayout");
 </script>
+<script>
+window.addEventListener("load", () => {
 
+    /* الخط */
+    if(font){
+        document.body.style.fontFamily = font;
+    }
+
+    /* صورة الغلاف */
+    if(coverImage){
+        const logoWrapper = document.getElementById("logoWrapper");
+
+        if(logoWrapper){
+            logoWrapper.style.backgroundImage = `url('${coverImage}')`;
+            logoWrapper.style.backgroundSize = "cover";
+            logoWrapper.style.backgroundPosition = "center";
+        }
+    }
+
+    /* شكل الأزرار */
+    if(cardStyle){
+
+        document.querySelectorAll(".btn").forEach(btn=>{
+
+            if(cardStyle === "square"){
+                btn.style.borderRadius = "0px";
+            }
+
+            if(cardStyle === "rounded"){
+                btn.style.borderRadius = "18px";
+            }
+
+            if(cardStyle === "pill"){
+                btn.style.borderRadius = "999px";
+            }
+
+        });
+
+    }
+
+    /* لون الأيقونات */
+    if(iconColor){
+
+        document.querySelectorAll(".custom-icon").forEach(icon=>{
+
+            icon.style.filter =
+            "drop-shadow(0 0 0 "+iconColor+")";
+
+        });
+
+    }
+
+});
+</script>
 </body>  
 </html>
