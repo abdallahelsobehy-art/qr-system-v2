@@ -27,7 +27,7 @@
             background-color: #f2f2f2;
             padding: 20px;
             direction: rtl;
-            padding-bottom: 110px; /* مسافة كافية لكي لا تغطي الأزرار الثابتة المحتوى */
+            padding-bottom: 130px; /* مسافة أمان كافية لكي لا تغطي الأزرار أي محتوى */
         }
 
         /* PWA Install Button Style */
@@ -130,12 +130,13 @@
             left: 0;
             width: 100%;
             background: #ffffff;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
             padding: 12px 20px;
             display: none;
             justify-content: center;
             gap: 15px;
-            z-index: 9999;
+            z-index: 99999; /* ضمان ظهوره دائماً فوق أي عنصر آخر أو الـ iframe */
+            border-top: 1px solid #e2e8f0;
         }
 
         .sticky-footer .btn {
@@ -1351,4 +1352,4 @@
     }
 </script>
 </body>
-                </html>
+    </html>
