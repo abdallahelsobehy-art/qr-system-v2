@@ -20,6 +20,7 @@ body{
     background:#f0f3f8;
     font-family:'Cairo',sans-serif;
     padding:15px;
+    direction:rtl;
 }
 
 /* التخطيط */
@@ -33,7 +34,7 @@ body{
 /* منطقة الأدوات */
 .designer-panel{
     flex:1;
-    min-height:1200px;
+    min-height:800px;
 }
 
 /* شاشة المعاينة */
@@ -47,10 +48,11 @@ body{
 .phone-frame{
     width: 180px;
     height: 360px;
-    background: #fff;
+    background: #000;
     border-radius: 25px;
     overflow: hidden;
     position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 #previewFrame{
@@ -286,6 +288,12 @@ input[type="file"] {
     object-fit: cover;
 }
 
+.file-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 /* موبايل */
 @media(max-width:992px){
     .designer-layout{
@@ -325,7 +333,7 @@ input[type="file"] {
     <!-- أدوات التخصيص -->
     <div class="designer-panel">
 
-        <!-- قسم 4: الخلفيات والخطوط والأيقونات والصور -->
+        <!-- قسم: الخلفيات والخطوط والأيقونات والصور -->
         <div class="designer-card">
             <h3><i class="fa-solid fa-wand-magic-sparkles"></i> تخصيص الصفحة والأزرار</h3>
 
@@ -543,6 +551,9 @@ let designData = {
     logoImage: ""
 };
 
+// Firebase instance
+let db = null;
+
 /* تجميع إعدادات التصميم الحالية */
 function collectDesign() {
     return designData;
@@ -666,7 +677,7 @@ function handleButtonBgImageUpload(input) {
         compressImage(input.files[0], function(dataUrl) {
             designData.buttonBgImage = dataUrl;
             setBgPreview("btnBgImagePreview", dataUrl);
-            send DesignToPreview();
+            sendDesignToPreview();
         });
     }
 }
@@ -813,8 +824,10 @@ function syncWithAdmin(){
         }
 
         codeInput.addEventListener("input", function(){
-            updatePagePreview(this.value);
-            loadCustomerDesign(this.value);
+            if(this.value){
+                updatePagePreview(this.value);
+                loadCustomerDesign(this.value);
+            }
         });
 
         const customerSelect = parentDoc.getElementById("customerSelect");
