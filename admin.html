@@ -27,7 +27,7 @@
             background-color: #f2f2f2;
             padding: 20px;
             direction: rtl;
-            padding-bottom: 90px;
+            padding-bottom: 110px; /* مسافة كافية لكي لا تغطي الأزرار الثابتة المحتوى */
         }
 
         /* PWA Install Button Style */
@@ -123,22 +123,23 @@
             display: block;
         }
 
+        /* شريط الأزرار الثابت في الأسفل */
         .sticky-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             background: #ffffff;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
             padding: 12px 20px;
             display: none;
             justify-content: center;
             gap: 15px;
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .sticky-footer .btn {
-            max-width: 200px;
+            max-width: 220px;
             margin-top: 0;
         }
 
@@ -389,17 +390,6 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        .login-body .input-icon-img {
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
         .toggle-password-img {
             position: absolute;
             top: 50%;
@@ -513,7 +503,7 @@
         <div class="login-body">
             <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
-                <img src="assets/user-icon.png" class="input-icon-img" alt="مستخدم">
+                <img src="assets/user-icon.png" class="input-icon-img" alt="مستخدم" style="position:absolute; top:50%; right:15px; transform:translateY(-50%); width:20px; height:20px; pointer-events:none; opacity:0.8;">
             </div>
             
             <div class="input-box">
@@ -818,14 +808,12 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-    // تفعيل الـ Service Worker لتشغيل الموقع كتطبيق PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
         });
     }
 
-    // منطق زر التثبيت اليدوي (PWA Install Prompt)
     let deferredPrompt;
     const installBtn = document.getElementById('installButton');
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -839,9 +827,6 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                    }
                     deferredPrompt = null;
                     installBtn.style.display = 'none';
                 });
@@ -871,7 +856,6 @@
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("adminPassword");
         const toggleIcon = document.getElementById("toggleEyeIcon");
-        
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
             toggleIcon.src = "assets/eye-open.png";
@@ -1058,7 +1042,6 @@
             select.innerHTML = '<option value="">اختر العميل</option>';
             
             let customers = [];
-
             snapshot.forEach(function(child) {
                 customers.push({
                     key: child.key,
@@ -1338,7 +1321,6 @@
         qrCodeInstance = new QRCodeStyling(qrConfig);
         qrCodeInstance.append(qrContainer);
 
-        // تحديث شاشة المعاينة داخل التبويب الرابع (Designer)
         const designerFrame = document.getElementById("pageDesignerFrame");
         if (designerFrame) {
             const customerId = SafeGetValue("code");
@@ -1367,18 +1349,6 @@
             extension: format
         });
     }
-
-    window.addEventListener("load", function(){
-        const designerFrame = document.getElementById("pageDesignerFrame");
-        if(designerFrame){
-            designerFrame.onload = function(){
-                const customerId = SafeGetValue("code");
-                if(this.contentWindow && typeof this.contentWindow.updatePagePreview === "function"){
-                    this.contentWindow.updatePagePreview(customerId);
-                }
-            };
-        }
-    });
 </script>
 </body>
-    </html>
+                </html>
