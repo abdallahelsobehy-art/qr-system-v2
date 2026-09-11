@@ -298,27 +298,20 @@ function applyLiveDesign(designObj) {
     }
 
     /* شكل الأزرار */
-    if(cardStyle){
+    document.querySelectorAll(".btn").forEach(btn=>{
 
-        document.querySelectorAll(".btn").forEach(btn=>{
+        if(cardStyle==="pill"){
+            btn.style.borderRadius="999px";
+        }
 
-            btn.classList.remove("style-rounded","style-pill","style-square");
+        else if(cardStyle==="square"){
+            btn.style.borderRadius="6px";
+        }
 
-            if(cardStyle==="rounded"){
-                btn.style.borderRadius="18px";
-            }
-
-            if(cardStyle==="pill"){
-                btn.style.borderRadius="999px";
-            }
-
-            if(cardStyle==="square"){
-                btn.style.borderRadius="0";
-            }
-
-        });
-
-    }
+        else{
+            btn.style.borderRadius="18px";
+        }
+    });
 
     /* لون الأيقونات */
     if(iconColor){
@@ -326,10 +319,9 @@ function applyLiveDesign(designObj) {
         document.querySelectorAll(".custom-icon").forEach(icon=>{
 
             icon.style.filter=
-            "drop-shadow(0 0 0 "+iconColor+")";
+            `drop-shadow(0 0 0 ${iconColor})`;
 
         });
-
     }
 }  
   
