@@ -348,10 +348,17 @@ return;
 
 }
 
-// التوجيه المباشر لو موجود
-if (data.redirectUrl && data.redirectUrl.trim() !== "") {
-    window.location.replace(data.redirectUrl.trim());
-    return;
+// معالجة الإعادة التوجيه مع دعم Preview Mode
+const isPreview =
+new URLSearchParams(location.search).get("preview") === "1";
+
+if(
+   !isPreview &&
+   data.redirectUrl &&
+   data.redirectUrl.trim() !== ""
+){
+   window.location.replace(data.redirectUrl.trim());
+   return;
 }
 
 
@@ -516,6 +523,65 @@ document.getElementById("footerText").textContent =
 
 });
 
+// نظام التصميم الديناميكي
+window.addEventListener("message", function(event){
+
+    if(!event.data) return;
+
+    if(event.data.type !== "applyDesign") return;
+
+    const design = event.data.design || {};
+
+    // الخط
+    if(design.font){
+        document.body.style.fontFamily = design.font;
+    }
+
+    // لون الأيقونات
+    if(design.iconColor){
+
+        document.querySelectorAll(".custom-icon").forEach(icon=>{
+            icon.style.filter =
+                "drop-shadow(0 0 0 " + design.iconColor + ")";
+        });
+    }
+
+    // خلفية الصفحة
+    if(design.bgImage){
+
+        document.body.style.backgroundImage =
+            `url(${design.bgImage})`;
+    }
+
+    // خلفية الأزرار
+    if(design.cardImage){
+
+        document.querySelectorAll(".btn").forEach(btn=>{
+
+            btn.style.backgroundImage =
+                `url(${design.cardImage})`;
+
+            btn.style.backgroundSize = "cover";
+        });
+    }
+
+    // شكل الأزرار
+    if(design.cardStyle){
+
+        let radius = "18px";
+
+        if(design.cardStyle === "pill")
+            radius = "999px";
+
+        if(design.cardStyle === "square")
+            radius = "0px";
+
+        document.querySelectorAll(".btn").forEach(btn=>{
+            btn.style.borderRadius = radius;
+        });
+    }
+
+});
 
 </script>
 
