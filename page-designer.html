@@ -93,7 +93,7 @@ body{
     color: #2d3748;
     font-size: 14px;
     font-weight: bold;
-    border-right: 3px solid #3b82f6;
+    border-right: 3px solid #111;
     padding-right: 10px;
 }
 
@@ -138,7 +138,7 @@ input[type="range"] {
 }
 
 input[type="text"]:focus, select:focus, input[type="file"]:focus {
-    border-color: #3b82f6;
+    border-color: #111;
 }
 
 input[type="file"] {
@@ -189,8 +189,8 @@ input[type="file"] {
 }
 
 .radio-item.active {
-    border-color: #3b82f6;
-    background: #eff6ff;
+    border-color: #111;
+    background: #f1f1f1;
 }
 
 .options-grid {
@@ -220,9 +220,9 @@ input[type="file"] {
 }
 
 .option-box.active {
-    border-color: #3b82f6;
-    background: #eff6ff;
-    box-shadow: 0 0 0 1px #3b82f6;
+    border-color: #111;
+    background: #f1f1f1;
+    box-shadow: 0 0 0 1px #111;
 }
 
 .btn {
@@ -248,7 +248,7 @@ input[type="file"] {
 }
 
 .btn-file {
-    background: #4A5568;
+    background: #111;
     color: #fff;
     padding: 9px 14px;
     border-radius: 8px;
@@ -333,7 +333,6 @@ input[type="file"] {
     <!-- أدوات التخصيص -->
     <div class="designer-panel">
 
-        <!-- قسم: الخلفيات والخطوط والأيقونات والصور -->
         <div class="designer-card">
             <h3><i class="fa-solid fa-wand-magic-sparkles"></i> تخصيص الصفحة والأزرار</h3>
 
@@ -431,7 +430,7 @@ input[type="file"] {
             <div class="grid-2">
                 <div class="form-group">
                     <label>لون خلفية الزر</label>
-                    <input type="color" id="buttonBgColor" value="#3b82f6" oninput="triggerLiveUpdate()">
+                    <input type="color" id="buttonBgColor" value="#111111" oninput="triggerLiveUpdate()">
                 </div>
                 <div class="form-group">
                     <label>لون النص</label>
@@ -496,11 +495,11 @@ input[type="file"] {
                 </div>
             </div>
 
-            <!-- 5. الشعار والصور -->
+            <!-- 5. الشعار والصور (تم مطابقتها مع تصميم صفحة اليكوار وبيانات العميل) -->
             <h4><i class="fa-solid fa-image"></i> الشعار والصور</h4>
 
             <div class="form-group">
-                <label>لوجو العميل</label>
+                <label>لوجو العميل (شعار العميل)</label>
                 <div class="radio-group">
                     <label class="radio-item active" onclick="selectLogoType(this, 'default')">
                         <input type="radio" name="logoType" value="default" checked>
@@ -508,12 +507,15 @@ input[type="file"] {
                     </label>
                     <label class="radio-item" onclick="selectLogoType(this, 'upload')">
                         <input type="radio" name="logoType" value="upload">
-                        <span>رفع صورة خاصة</span>
+                        <span>رفع صورة خاصة (اختيار صورة من الجهاز)</span>
                     </label>
                 </div>
                 <div id="logoUploadContainer" style="display:none; margin-top:10px;">
-                    <label class="btn-file" for="logoImageInput"><i class="fa-solid fa-upload"></i> اختيار الصورة</label>
-                    <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoImageUpload(this)">
+                    <div class="file-input-wrapper">
+                        <input type="text" id="customLogoUrlInput" placeholder="رابط الصورة أو اختر ملفاً" onchange="handleLogoUrlChange(this)">
+                        <label class="btn-file" for="logoImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
+                        <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoImageUpload(this)">
+                    </div>
                     <img id="logoImagePreview" class="bg-preview" alt="معاينة اللوجو">
                 </div>
             </div>
@@ -539,7 +541,7 @@ let designData = {
     fontFamily: "'Cairo', sans-serif",
     fontColor: "#ffffff",
     fontSize: "20",
-    buttonBgColor: "#3b82f6",
+    buttonBgColor: "#111111",
     buttonTextColor: "#ffffff",
     iconColor: "#ffffff",
     buttonRadius: "18",
@@ -551,15 +553,10 @@ let designData = {
     logoImage: ""
 };
 
-// Firebase instance
-let db = null;
-
-/* تجميع إعدادات التصميم الحالية */
 function collectDesign() {
     return designData;
 }
 
-/* إرسال التصميم الحي لصفحة المعاينة بدون إعادة تحميل (PostMessage) */
 function sendDesignToPreview() {
     const iframe = document.getElementById("previewFrame");
     if (iframe && iframe.contentWindow) {
@@ -567,7 +564,6 @@ function sendDesignToPreview() {
     }
 }
 
-/* تحميل صفحة المعاينة لعميل معين */
 function updatePagePreview(customerCode){
     if(!customerCode) return;
     currentLoadedCode = customerCode;
@@ -576,13 +572,11 @@ function updatePagePreview(customerCode){
     iframe.src = `qr.html?id=${encodeURIComponent(customerCode)}&preview=1&t=${Date.now()}`;
 }
 
-/* أي تغيير في الأدوات بيظهر فوراً في المعاينة */
 function triggerLiveUpdate() {
     updateDesignData();
     sendDesignToPreview();
 }
 
-/* تحديث البيانات من الحقول */
 function updateDesignData() {
     designData.fontFamily = document.getElementById("fontFamily").value;
     designData.fontColor = document.getElementById("fontColor").value;
@@ -594,7 +588,6 @@ function updateDesignData() {
     designData.buttonShadow = document.getElementById("buttonShadow").value;
 }
 
-/* ضغط الصور وتصغيرها */
 function compressImage(file, callback) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -626,21 +619,15 @@ function setBgPreview(previewId, url) {
     }
 }
 
-/* خلفية الصفحة */
 function selectBackgroundType(element, type) {
-    document.querySelectorAll('label[onclick*="selectBackgroundType"]').forEach(el => {
-        el.classList.remove('active');
-    });
+    document.querySelectorAll('label[onclick*="selectBackgroundType"]').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-    
     designData.backgroundType = type;
     document.getElementById("bgUploadContainer").style.display = type === "upload" ? "block" : "none";
-    
     if (type === "default") {
         designData.backgroundImage = "";
         setBgPreview("bgImagePreview", "");
     }
-    
     triggerLiveUpdate();
 }
 
@@ -654,21 +641,15 @@ function handleBgImageUpload(input) {
     }
 }
 
-/* خلفية الأزرار */
 function selectButtonBgType(element, type) {
-    document.querySelectorAll('label[onclick*="selectButtonBgType"]').forEach(el => {
-        el.classList.remove('active');
-    });
+    document.querySelectorAll('label[onclick*="selectButtonBgType"]').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-    
     designData.buttonBgType = type;
     document.getElementById("btnBgUploadContainer").style.display = type === "upload" ? "block" : "none";
-    
     if (type === "default") {
         designData.buttonBgImage = "";
         setBgPreview("btnBgImagePreview", "");
     }
-    
     triggerLiveUpdate();
 }
 
@@ -682,21 +663,15 @@ function handleButtonBgImageUpload(input) {
     }
 }
 
-/* صورة الغلاف */
 function selectCoverType(element, type) {
-    document.querySelectorAll('label[onclick*="selectCoverType"]').forEach(el => {
-        el.classList.remove('active');
-    });
+    document.querySelectorAll('label[onclick*="selectCoverType"]').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-    
     designData.coverType = type;
     document.getElementById("coverUploadContainer").style.display = type === "upload" ? "block" : "none";
-    
     if (type === "default") {
         designData.coverImage = "";
         setBgPreview("coverImagePreview", "");
     }
-    
     triggerLiveUpdate();
 }
 
@@ -710,54 +685,36 @@ function handleCoverImageUpload(input) {
     }
 }
 
-/* حجم الأيقونة */
 function selectIconSize(element, size) {
-    element.parentElement.querySelectorAll('.option-box').forEach(box => {
-        box.classList.remove('active');
-    });
+    element.parentElement.querySelectorAll('.option-box').forEach(box => box.classList.remove('active'));
     element.classList.add('active');
-    
     designData.iconSize = size;
     triggerLiveUpdate();
 }
 
-/* مكان الأيقونة */
 function selectIconPosition(element, position) {
-    element.parentElement.querySelectorAll('.option-box').forEach(box => {
-        box.classList.remove('active');
-    });
+    element.parentElement.querySelectorAll('.option-box').forEach(box => box.classList.remove('active'));
     element.classList.add('active');
-    
     designData.iconPosition = position;
     triggerLiveUpdate();
 }
 
-/* شكل الأيقونة */
 function selectIconShape(element, shape) {
-    element.parentElement.querySelectorAll('.option-box').forEach(box => {
-        box.classList.remove('active');
-    });
+    element.parentElement.querySelectorAll('.option-box').forEach(box => box.classList.remove('active'));
     element.classList.add('active');
-    
     designData.iconShape = shape;
     triggerLiveUpdate();
 }
 
-/* لوجو العميل */
 function selectLogoType(element, type) {
-    document.querySelectorAll('label[onclick*="selectLogoType"]').forEach(el => {
-        el.classList.remove('active');
-    });
+    document.querySelectorAll('label[onclick*="selectLogoType"]').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-    
     designData.logoType = type;
     document.getElementById("logoUploadContainer").style.display = type === "upload" ? "block" : "none";
-    
     if (type === "default") {
         designData.logoImage = "";
         setBgPreview("logoImagePreview", "");
     }
-    
     triggerLiveUpdate();
 }
 
@@ -765,13 +722,19 @@ function handleLogoImageUpload(input) {
     if (input.files && input.files[0]) {
         compressImage(input.files[0], function(dataUrl) {
             designData.logoImage = dataUrl;
+            document.getElementById("customLogoUrlInput").value = dataUrl;
             setBgPreview("logoImagePreview", dataUrl);
             sendDesignToPreview();
         });
     }
 }
 
-/* تحديث قيم الـ Range */
+function handleLogoUrlChange(input) {
+    designData.logoImage = input.value;
+    setBgPreview("logoImagePreview", input.value);
+    sendDesignToPreview();
+}
+
 document.getElementById("fontSize")?.addEventListener("input", function() {
     document.getElementById("fontSizeValue").textContent = this.value + "px";
 });
@@ -784,70 +747,44 @@ document.getElementById("buttonShadow")?.addEventListener("input", function() {
     document.getElementById("buttonShadowValue").textContent = this.value + "px";
 });
 
-/* حفظ الإعدادات */
 function saveDesignSettings() {
     if (!currentLoadedCode) {
         alert("لا يوجد عميل محدد لحفظ إعدادات التصميم الخاصة به.");
         return;
     }
-
     updateDesignData();
-
     try {
         const parentWindow = window.parent;
         if (parentWindow && parentWindow.db) {
             parentWindow.db.ref("customers/" + currentLoadedCode + "/design").set(designData)
-            .then(() => {
-                alert("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!");
-            })
-            .catch(err => {
-                alert("حدث خطأ أثناء الحفظ: " + err.message);
-            });
+            .then(() => alert("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!"))
+            .catch(err => alert("حدث خطأ أثناء الحفظ: " + err.message));
         }
     } catch (e) {
-        console.log("Database connection error:", e);
         alert("تم تطبيق التصميم محلياً بنجاح.");
     }
 }
 
-/* جلب الكود من صفحة الأدمن تلقائياً */
 function syncWithAdmin(){
     try{
         const parentDoc = window.parent.document;
         const codeInput = parentDoc.getElementById("code");
-
         if(!codeInput) return;
-
         if(codeInput.value){
             updatePagePreview(codeInput.value);
             loadCustomerDesign(codeInput.value);
         }
-
         codeInput.addEventListener("input", function(){
             if(this.value){
                 updatePagePreview(this.value);
                 loadCustomerDesign(this.value);
             }
         });
-
-        const customerSelect = parentDoc.getElementById("customerSelect");
-        if(customerSelect){
-            customerSelect.addEventListener("change", function(){
-                setTimeout(function(){
-                    const currentCode = parentDoc.getElementById("code").value;
-                    if (currentCode) {
-                        updatePagePreview(currentCode);
-                        loadCustomerDesign(currentCode);
-                    }
-                }, 500);
-            });
-        }
     }catch(err){
         console.log("Sync error:", err);
     }
 }
 
-/* تحميل تصميم العميل المحفوظ */
 function loadCustomerDesign(code) {
     try {
         const parentWindow = window.parent;
@@ -856,8 +793,6 @@ function loadCustomerDesign(code) {
                 const design = snapshot.val();
                 if (design) {
                     designData = { ...designData, ...design };
-                    
-                    // تحديث الحقول
                     if(design.fontFamily) document.getElementById("fontFamily").value = design.fontFamily;
                     if(design.fontColor) document.getElementById("fontColor").value = design.fontColor;
                     if(design.fontSize) {
@@ -875,28 +810,15 @@ function loadCustomerDesign(code) {
                         document.getElementById("buttonShadow").value = design.buttonShadow;
                         document.getElementById("buttonShadowValue").textContent = design.buttonShadow + "px";
                     }
-
-                    // تحديث الصور
-                    if(design.backgroundImage) {
-                        setBgPreview("bgImagePreview", design.backgroundImage);
-                    }
-                    if(design.buttonBgImage) {
-                        setBgPreview("btnBgImagePreview", design.buttonBgImage);
-                    }
-                    if(design.coverImage) {
-                        setBgPreview("coverImagePreview", design.coverImage);
-                    }
                     if(design.logoImage) {
+                        document.getElementById("customLogoUrlInput").value = design.logoImage;
                         setBgPreview("logoImagePreview", design.logoImage);
                     }
-
                     sendDesignToPreview();
                 }
             });
         }
-    } catch(e) {
-        console.log("Could not load design from DB", e);
-    }
+    } catch(e) {}
 }
 
 window.onload = function(){
