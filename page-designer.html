@@ -113,7 +113,7 @@ body{
     font-size: 13px;
 }
 
-input[type="text"], input[type="color"], input[type="range"], input[type="file"], select {
+input[type="text"], input[type="color"], select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #dcdcdc;
@@ -131,19 +131,35 @@ input[type="color"] {
     cursor: pointer;
 }
 
+/* تحسين أشكال شريط التمرير (Range Slider) ليكون باللون الأسود */
 input[type="range"] {
-    padding: 0;
+    -webkit-appearance: none;
+    width: 100%;
     height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    outline: none;
+    padding: 0;
     cursor: pointer;
 }
 
-input[type="text"]:focus, select:focus, input[type="file"]:focus {
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #111;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+input[type="text"]:focus, select:focus {
     border-color: #111;
-}
-
-input[type="file"] {
-    padding: 8px 12px;
-    cursor: pointer;
 }
 
 .grid-2 {
@@ -182,15 +198,37 @@ input[type="file"] {
 }
 
 .radio-item input[type="radio"] {
-    width: auto;
-    padding: 0;
-    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #a0aec0;
+    border-radius: 50%;
+    outline: none;
     cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.radio-item input[type="radio"]:checked {
+    border-color: #111;
+}
+
+.radio-item input[type="radio"]:checked::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #111;
+    border-radius: 50%;
+    display: block;
 }
 
 .radio-item.active {
     border-color: #111;
-    background: #f1f1f1;
+    background: #f8f9fa;
 }
 
 .options-grid {
@@ -247,22 +285,31 @@ input[type="file"] {
     opacity: 0.9;
 }
 
-.btn-file {
-    background: #111;
+/* نمط زر المعرض (من المعرض) المطابق لصورة QR المرفقة */
+.btn-gallery {
+    background: #2b384e;
     color: #fff;
-    padding: 9px 14px;
-    border-radius: 8px;
+    padding: 8px 14px;
+    border-radius: 6px;
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
-    width: fit-content;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    border: none;
+    font-family: 'Cairo', sans-serif;
+    transition: opacity 0.2s;
 }
 
-.btn-file:hover {
+.btn-gallery:hover {
     opacity: 0.9;
+}
+
+.upload-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 input[type="file"] {
@@ -286,12 +333,6 @@ input[type="file"] {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     object-fit: cover;
-}
-
-.file-input-wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: center;
 }
 
 /* موبايل */
@@ -352,8 +393,11 @@ input[type="file"] {
                     </label>
                 </div>
                 <div id="bgUploadContainer" style="display:none; margin-top:10px;">
-                    <label class="btn-file" for="bgImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
-                    <input type="file" id="bgImageInput" accept="image/*" onchange="handleBgImageUpload(this)">
+                    <div class="upload-row">
+                        <input type="text" id="bgUrlInput" placeholder="رابط الصورة أو اختر من المعرض" onchange="handleBgUrlChange(this)">
+                        <label class="btn-gallery" for="bgImageInput"><i class="fa-solid fa-folder-open"></i> من المعرض</label>
+                        <input type="file" id="bgImageInput" accept="image/*" onchange="handleBgImageUpload(this)">
+                    </div>
                     <img id="bgImagePreview" class="bg-preview" alt="معاينة خلفية الصفحة">
                 </div>
             </div>
@@ -371,8 +415,11 @@ input[type="file"] {
                     </label>
                 </div>
                 <div id="btnBgUploadContainer" style="display:none; margin-top:10px;">
-                    <label class="btn-file" for="btnBgImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
-                    <input type="file" id="btnBgImageInput" accept="image/*" onchange="handleButtonBgImageUpload(this)">
+                    <div class="upload-row">
+                        <input type="text" id="btnBgUrlInput" placeholder="رابط الصورة أو اختر من المعرض" onchange="handleBtnBgUrlChange(this)">
+                        <label class="btn-gallery" for="btnBgImageInput"><i class="fa-solid fa-folder-open"></i> من المعرض</label>
+                        <input type="file" id="btnBgImageInput" accept="image/*" onchange="handleButtonBgImageUpload(this)">
+                    </div>
                     <img id="btnBgImagePreview" class="bg-preview" alt="معاينة خلفية الأزرار">
                 </div>
             </div>
@@ -390,8 +437,11 @@ input[type="file"] {
                     </label>
                 </div>
                 <div id="coverUploadContainer" style="display:none; margin-top:10px;">
-                    <label class="btn-file" for="coverImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
-                    <input type="file" id="coverImageInput" accept="image/*" onchange="handleCoverImageUpload(this)">
+                    <div class="upload-row">
+                        <input type="text" id="coverUrlInput" placeholder="رابط الصورة أو اختر من المعرض" onchange="handleCoverUrlChange(this)">
+                        <label class="btn-gallery" for="coverImageInput"><i class="fa-solid fa-folder-open"></i> من المعرض</label>
+                        <input type="file" id="coverImageInput" accept="image/*" onchange="handleCoverImageUpload(this)">
+                    </div>
                     <img id="coverImagePreview" class="bg-preview" alt="معاينة صورة الغلاف">
                 </div>
             </div>
@@ -495,7 +545,7 @@ input[type="file"] {
                 </div>
             </div>
 
-            <!-- 5. الشعار والصور (تم مطابقتها مع تصميم صفحة اليكوار وبيانات العميل) -->
+            <!-- 5. الشعار والصور -->
             <h4><i class="fa-solid fa-image"></i> الشعار والصور</h4>
 
             <div class="form-group">
@@ -507,13 +557,13 @@ input[type="file"] {
                     </label>
                     <label class="radio-item" onclick="selectLogoType(this, 'upload')">
                         <input type="radio" name="logoType" value="upload">
-                        <span>رفع صورة خاصة (اختيار صورة من الجهاز)</span>
+                        <span>رفع صورة خاصة</span>
                     </label>
                 </div>
                 <div id="logoUploadContainer" style="display:none; margin-top:10px;">
-                    <div class="file-input-wrapper">
-                        <input type="text" id="customLogoUrlInput" placeholder="رابط الصورة أو اختر ملفاً" onchange="handleLogoUrlChange(this)">
-                        <label class="btn-file" for="logoImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
+                    <div class="upload-row">
+                        <input type="text" id="customLogoUrlInput" placeholder="رابط الصورة أو اختر من المعرض" onchange="handleLogoUrlChange(this)">
+                        <label class="btn-gallery" for="logoImageInput"><i class="fa-solid fa-folder-open"></i> من المعرض</label>
                         <input type="file" id="logoImageInput" accept="image/*" onchange="handleLogoImageUpload(this)">
                     </div>
                     <img id="logoImagePreview" class="bg-preview" alt="معاينة اللوجو">
@@ -620,8 +670,15 @@ function setBgPreview(previewId, url) {
 }
 
 function selectBackgroundType(element, type) {
-    document.querySelectorAll('label[onclick*="selectBackgroundType"]').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('label[onclick*="selectBackgroundType"]').forEach(el => {
+        el.classList.remove('active');
+        const radio = el.querySelector('input[type="radio"]');
+        if(radio) radio.checked = false;
+    });
     element.classList.add('active');
+    const activeRadio = element.querySelector('input[type="radio"]');
+    if(activeRadio) activeRadio.checked = true;
+
     designData.backgroundType = type;
     document.getElementById("bgUploadContainer").style.display = type === "upload" ? "block" : "none";
     if (type === "default") {
@@ -635,15 +692,29 @@ function handleBgImageUpload(input) {
     if (input.files && input.files[0]) {
         compressImage(input.files[0], function(dataUrl) {
             designData.backgroundImage = dataUrl;
+            document.getElementById("bgUrlInput").value = dataUrl;
             setBgPreview("bgImagePreview", dataUrl);
             sendDesignToPreview();
         });
     }
 }
 
+function handleBgUrlChange(input) {
+    designData.backgroundImage = input.value;
+    setBgPreview("bgImagePreview", input.value);
+    sendDesignToPreview();
+}
+
 function selectButtonBgType(element, type) {
-    document.querySelectorAll('label[onclick*="selectButtonBgType"]').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('label[onclick*="selectButtonBgType"]').forEach(el => {
+        el.classList.remove('active');
+        const radio = el.querySelector('input[type="radio"]');
+        if(radio) radio.checked = false;
+    });
     element.classList.add('active');
+    const activeRadio = element.querySelector('input[type="radio"]');
+    if(activeRadio) activeRadio.checked = true;
+
     designData.buttonBgType = type;
     document.getElementById("btnBgUploadContainer").style.display = type === "upload" ? "block" : "none";
     if (type === "default") {
@@ -657,15 +728,29 @@ function handleButtonBgImageUpload(input) {
     if (input.files && input.files[0]) {
         compressImage(input.files[0], function(dataUrl) {
             designData.buttonBgImage = dataUrl;
+            document.getElementById("btnBgUrlInput").value = dataUrl;
             setBgPreview("btnBgImagePreview", dataUrl);
             sendDesignToPreview();
         });
     }
 }
 
+function handleBtnBgUrlChange(input) {
+    designData.buttonBgImage = input.value;
+    setBgPreview("btnBgImagePreview", input.value);
+    sendDesignToPreview();
+}
+
 function selectCoverType(element, type) {
-    document.querySelectorAll('label[onclick*="selectCoverType"]').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('label[onclick*="selectCoverType"]').forEach(el => {
+        el.classList.remove('active');
+        const radio = el.querySelector('input[type="radio"]');
+        if(radio) radio.checked = false;
+    });
     element.classList.add('active');
+    const activeRadio = element.querySelector('input[type="radio"]');
+    if(activeRadio) activeRadio.checked = true;
+
     designData.coverType = type;
     document.getElementById("coverUploadContainer").style.display = type === "upload" ? "block" : "none";
     if (type === "default") {
@@ -679,10 +764,17 @@ function handleCoverImageUpload(input) {
     if (input.files && input.files[0]) {
         compressImage(input.files[0], function(dataUrl) {
             designData.coverImage = dataUrl;
+            document.getElementById("coverUrlInput").value = dataUrl;
             setBgPreview("coverImagePreview", dataUrl);
             sendDesignToPreview();
         });
     }
+}
+
+function handleCoverUrlChange(input) {
+    designData.coverImage = input.value;
+    setBgPreview("coverImagePreview", input.value);
+    sendDesignToPreview();
 }
 
 function selectIconSize(element, size) {
@@ -707,8 +799,15 @@ function selectIconShape(element, shape) {
 }
 
 function selectLogoType(element, type) {
-    document.querySelectorAll('label[onclick*="selectLogoType"]').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('label[onclick*="selectLogoType"]').forEach(el => {
+        el.classList.remove('active');
+        const radio = el.querySelector('input[type="radio"]');
+        if(radio) radio.checked = false;
+    });
     element.classList.add('active');
+    const activeRadio = element.querySelector('input[type="radio"]');
+    if(activeRadio) activeRadio.checked = true;
+
     designData.logoType = type;
     document.getElementById("logoUploadContainer").style.display = type === "upload" ? "block" : "none";
     if (type === "default") {
