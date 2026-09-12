@@ -27,10 +27,9 @@
             background-color: #f2f2f2;
             padding: 20px;
             direction: rtl;
-            padding-bottom: 130px; /* مسافة أمان كافية لكي لا تغطي الأزرار أي محتوى */
+            padding-bottom: 130px;
         }
 
-        /* PWA Install Button Style */
         #installButton {
             display: none;
             position: fixed;
@@ -123,7 +122,6 @@
             display: block;
         }
 
-        /* شريط الأزرار الثابت في الأسفل */
         .sticky-footer {
             position: fixed;
             bottom: 0;
@@ -135,7 +133,7 @@
             display: none;
             justify-content: center;
             gap: 15px;
-            z-index: 99999; /* ضمان ظهوره دائماً فوق أي عنصر آخر أو الـ iframe */
+            z-index: 99999;
             border-top: 1px solid #e2e8f0;
         }
 
@@ -1293,3 +1291,56 @@
                 color: dotColor,
                 type: dotType
             },
+            backgroundOptions: {
+                color: bgColor,
+            },
+            cornersSquareOptions: {
+                type: cornerType,
+                color: cornerColor
+            },
+            cornersDotOptions: {
+                type: cornerDotType,
+                color: cornerDotColor
+            }
+        };
+
+        if (embedLogo === "yes" && finalLogo) {
+            qrConfig.image = finalLogo;
+            qrConfig.imageOptions = {
+                hideBackgroundDots: true,
+                imageSize: 0.4,
+                margin: 5
+            };
+        }
+
+        qrCodeInstance = new QRCodeStyling(qrConfig);
+        qrCodeInstance.append(qrContainer);
+    }
+
+    function downloadQR() {
+        if (!qrCodeInstance) {
+            showCustomAlert("يرجى توليد الـ QR أولاً");
+            return;
+        }
+
+        const format = document.getElementById("downloadFormat").value || "png";
+        const sizeVal = parseInt(document.getElementById("downloadSize").value) || 2000;
+
+        qrCodeInstance.update({
+            width: sizeVal,
+            height: sizeVal
+        });
+
+        qrCodeInstance.download({
+            name: "customer-qr-" + SafeGetValue("code"),
+            extension: format
+        }).then(() => {
+            generateQR();
+        }).catch(err => {
+            console.log("Download error:", err);
+            generateQR();
+        });
+    }
+</script>
+</body>
+</html>
