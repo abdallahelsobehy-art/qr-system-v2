@@ -17,9 +17,9 @@
 }
 
 body{
-    background:#ffffff;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding:0;
+    background:#f0f3f8;
+    font-family:'Cairo',sans-serif;
+    padding:15px;
     direction:rtl;
 }
 
@@ -69,20 +69,22 @@ body{
 
 /* بطاقات أقسام التخصيص */
 .designer-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 15px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.05);
 }
 
 .designer-card h3 {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     color: #111;
     font-size: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 10px;
 }
 
 .designer-card h4 {
@@ -108,18 +110,19 @@ body{
     margin-bottom: 6px;
     font-weight: bold;
     color: #444;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 input[type="text"], input[type="color"], input[type="range"], input[type="file"], select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #dcdcdc;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     outline: none;
     background-color: #fff;
     transition: border-color 0.2s;
+    font-family: 'Cairo', sans-serif;
 }
 
 input[type="color"] {
@@ -155,26 +158,46 @@ input[type="file"] {
     gap: 10px;
 }
 
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.radio-item:hover {
+    border-color: #cbd5e0;
+    background: #f8fafc;
+}
+
+.radio-item input[type="radio"] {
+    width: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.radio-item.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
 .options-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
     gap: 8px;
     margin-bottom: 10px;
-}
-
-.options-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 10px;
-}
-
-.options-grid-2 .option-box {
-    height: auto;
-    min-height: 45px;
-    padding: 8px 6px;
-    text-align: center;
-    line-height: 1.3;
 }
 
 .option-box {
@@ -206,11 +229,12 @@ input[type="file"] {
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: 6px;
-    font-size: 15px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     transition: opacity 0.2s;
+    font-family: 'Cairo', sans-serif;
 }
 
 .btn-save-design {
@@ -318,9 +342,15 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>خلفية الصفحة</label>
-                <div class="options-grid-2">
-                    <div class="option-box active" onclick="selectBackgroundType(this, 'default')">استخدام الخلفية الافتراضية</div>
-                    <div class="option-box" onclick="selectBackgroundType(this, 'upload')">رفع صورة من الجهاز</div>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectBackgroundType(this, 'default')">
+                        <input type="radio" name="bgType" value="default" checked>
+                        <span>استخدام الخلفية الافتراضية</span>
+                    </label>
+                    <label class="radio-item" onclick="selectBackgroundType(this, 'upload')">
+                        <input type="radio" name="bgType" value="upload">
+                        <span>رفع صورة من الجهاز</span>
+                    </label>
                 </div>
                 <div id="bgUploadContainer" style="display:none; margin-top:10px;">
                     <label class="btn-file" for="bgImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
@@ -331,9 +361,15 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>خلفية الأزرار</label>
-                <div class="options-grid-2">
-                    <div class="option-box active" onclick="selectButtonBgType(this, 'default')">افتراضي</div>
-                    <div class="option-box" onclick="selectButtonBgType(this, 'upload')">رفع صورة</div>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectButtonBgType(this, 'default')">
+                        <input type="radio" name="btnBgType" value="default" checked>
+                        <span>افتراضي</span>
+                    </label>
+                    <label class="radio-item" onclick="selectButtonBgType(this, 'upload')">
+                        <input type="radio" name="btnBgType" value="upload">
+                        <span>رفع صورة</span>
+                    </label>
                 </div>
                 <div id="btnBgUploadContainer" style="display:none; margin-top:10px;">
                     <label class="btn-file" for="btnBgImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
@@ -344,9 +380,15 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>صورة الغلاف (Cover Image)</label>
-                <div class="options-grid-2">
-                    <div class="option-box active" onclick="selectCoverType(this, 'default')">افتراضي</div>
-                    <div class="option-box" onclick="selectCoverType(this, 'upload')">رفع صورة</div>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectCoverType(this, 'default')">
+                        <input type="radio" name="coverType" value="default" checked>
+                        <span>افتراضي</span>
+                    </label>
+                    <label class="radio-item" onclick="selectCoverType(this, 'upload')">
+                        <input type="radio" name="coverType" value="upload">
+                        <span>رفع صورة</span>
+                    </label>
                 </div>
                 <div id="coverUploadContainer" style="display:none; margin-top:10px;">
                     <label class="btn-file" for="coverImageInput"><i class="fa-solid fa-upload"></i> اختيار صورة</label>
@@ -459,9 +501,15 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>لوجو العميل</label>
-                <div class="options-grid-2">
-                    <div class="option-box active" onclick="selectLogoType(this, 'default')">استخدام الصورة الافتراضية</div>
-                    <div class="option-box" onclick="selectLogoType(this, 'upload')">رفع صورة خاصة</div>
+                <div class="radio-group">
+                    <label class="radio-item active" onclick="selectLogoType(this, 'default')">
+                        <input type="radio" name="logoType" value="default" checked>
+                        <span>استخدام الصورة الافتراضية</span>
+                    </label>
+                    <label class="radio-item" onclick="selectLogoType(this, 'upload')">
+                        <input type="radio" name="logoType" value="upload">
+                        <span>رفع صورة خاصة</span>
+                    </label>
                 </div>
                 <div id="logoUploadContainer" style="display:none; margin-top:10px;">
                     <label class="btn-file" for="logoImageInput"><i class="fa-solid fa-upload"></i> اختيار الصورة</label>
@@ -580,7 +628,7 @@ function setBgPreview(previewId, url) {
 
 /* خلفية الصفحة */
 function selectBackgroundType(element, type) {
-    document.querySelectorAll('[onclick*="selectBackgroundType"]').forEach(el => {
+    document.querySelectorAll('label[onclick*="selectBackgroundType"]').forEach(el => {
         el.classList.remove('active');
     });
     element.classList.add('active');
@@ -608,7 +656,7 @@ function handleBgImageUpload(input) {
 
 /* خلفية الأزرار */
 function selectButtonBgType(element, type) {
-    document.querySelectorAll('[onclick*="selectButtonBgType"]').forEach(el => {
+    document.querySelectorAll('label[onclick*="selectButtonBgType"]').forEach(el => {
         el.classList.remove('active');
     });
     element.classList.add('active');
@@ -636,7 +684,7 @@ function handleButtonBgImageUpload(input) {
 
 /* صورة الغلاف */
 function selectCoverType(element, type) {
-    document.querySelectorAll('[onclick*="selectCoverType"]').forEach(el => {
+    document.querySelectorAll('label[onclick*="selectCoverType"]').forEach(el => {
         el.classList.remove('active');
     });
     element.classList.add('active');
@@ -697,7 +745,7 @@ function selectIconShape(element, shape) {
 
 /* لوجو العميل */
 function selectLogoType(element, type) {
-    document.querySelectorAll('[onclick*="selectLogoType"]').forEach(el => {
+    document.querySelectorAll('label[onclick*="selectLogoType"]').forEach(el => {
         el.classList.remove('active');
     });
     element.classList.add('active');
