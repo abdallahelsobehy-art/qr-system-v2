@@ -997,16 +997,12 @@
             const nextCode = prefixCode + formattedSeq;
 
             SafeSetValue("code", nextCode);
-            SafeSetValue(
-                "redirectUrl",
-                "https://abdallahelsobehy-art.github.io/Qr-codes/?code=" + nextCode
-            );
+            SafeSetValue("redirectUrl", "");
+            generateQR();
         }).catch(err => {
             SafeSetValue("code", prefixCode + "00001");
-            SafeSetValue(
-                "redirectUrl",
-                "https://abdallahelsobehy-art.github.io/Qr-codes/?code=" + (prefixCode + "00001")
-            );
+            SafeSetValue("redirectUrl", "");
+            generateQR();
         });
     }
 
@@ -1297,59 +1293,3 @@
                 color: dotColor,
                 type: dotType
             },
-            backgroundOptions: {
-                color: bgColor,
-            },
-            cornersSquareOptions: {
-                color: cornerColor,
-                type: cornerType
-            },
-            cornersDotOptions: {
-                color: cornerDotColor,
-                type: cornerDotType
-            }
-        };
-
-        if (embedLogo === "yes" && finalLogo) {
-            qrConfig.image = finalLogo;
-            qrConfig.imageOptions = {
-                crossOrigin: "anonymous",
-                margin: 5,
-                imageSize: 0.4
-            };
-        }
-
-        qrCodeInstance = new QRCodeStyling(qrConfig);
-        qrCodeInstance.append(qrContainer);
-
-        const designerFrame = document.getElementById("pageDesignerFrame");
-        if (designerFrame) {
-            const customerId = SafeGetValue("code");
-            try {
-                if (designerFrame.contentWindow && typeof designerFrame.contentWindow.updatePagePreview === "function") {
-                    designerFrame.contentWindow.updatePagePreview(customerId);
-                }
-            } catch(e) {
-                console.log("Preview Frame Not Ready");
-            }
-        }
-    }
-
-    function downloadQR() {
-        if (!qrCodeInstance) {
-            showCustomAlert("يرجى توليد الـ QR أولاً");
-            return;
-        }
-
-        const format = document.getElementById("downloadFormat").value;
-        const size = parseInt(document.getElementById("downloadSize").value);
-        const code = SafeGetValue("code") || "qrcode";
-
-        qrCodeInstance.download({
-            name: code,
-            extension: format
-        });
-    }
-</script>
-</body>
-    </html>
