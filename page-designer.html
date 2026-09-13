@@ -131,7 +131,7 @@ input[type="color"] {
     cursor: pointer;
 }
 
-/* تحسين أشكال شريط التمرير (Range Slider) ليكون باللون الأسود */
+/* تحسين شريط التمرير (Range Slider) ليعرض الجزء المستخدم بلون أسود */
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -152,6 +152,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: #111;
     cursor: pointer;
     transition: transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -285,9 +286,9 @@ input[type="text"]:focus, select:focus {
     opacity: 0.9;
 }
 
-/* نمط زر المعرض (من المعرض) المطابق لصورة QR المرفقة */
+/* نمط زر المعرض (مطابق لصورة رقم 2 تماماً) */
 .btn-gallery {
-    background: #2b384e;
+    background: #232b38;
     color: #fff;
     padding: 8px 14px;
     border-radius: 6px;
@@ -300,6 +301,7 @@ input[type="text"]:focus, select:focus {
     border: none;
     font-family: 'Cairo', sans-serif;
     transition: opacity 0.2s;
+    white-space: nowrap;
 }
 
 .btn-gallery:hover {
@@ -466,7 +468,7 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>حجم الخط</label>
-                <input type="range" id="fontSize" min="12" max="32" value="20" oninput="triggerLiveUpdate()">
+                <input type="range" id="fontSize" min="12" max="32" value="20" oninput="updateRangeFill(this); triggerLiveUpdate();">
                 <div class="range-value">
                     <span>12px</span>
                     <span id="fontSizeValue">20px</span>
@@ -495,7 +497,7 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>درجة الحدة (Border Radius)</label>
-                <input type="range" id="buttonRadius" min="0" max="50" value="18" oninput="triggerLiveUpdate()">
+                <input type="range" id="buttonRadius" min="0" max="50" value="18" oninput="updateRangeFill(this); triggerLiveUpdate();">
                 <div class="range-value">
                     <span>0px (مربع)</span>
                     <span id="buttonRadiusValue">18px</span>
@@ -505,7 +507,7 @@ input[type="file"] {
 
             <div class="form-group">
                 <label>الظل (Shadow)</label>
-                <input type="range" id="buttonShadow" min="0" max="20" value="6" oninput="triggerLiveUpdate()">
+                <input type="range" id="buttonShadow" min="0" max="20" value="6" oninput="updateRangeFill(this); triggerLiveUpdate();">
                 <div class="range-value">
                     <span>بدون</span>
                     <span id="buttonShadowValue">6px</span>
@@ -602,6 +604,21 @@ let designData = {
     logoType: "default",
     logoImage: ""
 };
+
+// دالة لتلوين الجزء المستخدم من شريط التمرير باللون الأسود
+function updateRangeFill(slider) {
+    const min = parseFloat(slider.min) || 0;
+    const max = parseFloat(slider.max) || 100;
+    const val = parseFloat(slider.value);
+    const percentage = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(to left, #111 ${percentage}%, #e2e8f0 ${percentage}%)`;
+}
+
+function initRanges() {
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        updateRangeFill(slider);
+    });
+}
 
 function collectDesign() {
     return designData;
@@ -913,6 +930,7 @@ function loadCustomerDesign(code) {
                         document.getElementById("customLogoUrlInput").value = design.logoImage;
                         setBgPreview("logoImagePreview", design.logoImage);
                     }
+                    initRanges();
                     sendDesignToPreview();
                 }
             });
@@ -921,6 +939,7 @@ function loadCustomerDesign(code) {
 }
 
 window.onload = function(){
+    initRanges();
     syncWithAdmin();
 };
 </script>
