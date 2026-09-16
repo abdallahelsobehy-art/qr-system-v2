@@ -958,7 +958,12 @@
 
     function SafeSetValue(id, val) {
         const el = document.getElementById(id);
-        if (el) el.value = val || "";
+        if (el) {
+            el.value = val || "";
+            // تفعيل حدث input يدويًا عشان أي كود بيستني تغيّر القيمة
+            // (زي صفحة تخصيص العميل) يعرف إن القيمة اتغيرت فعلاً
+            el.dispatchEvent(new Event("input", { bubbles: true }));
+        }
     }
 
     function SafeGetValue(id) {
@@ -1281,6 +1286,8 @@
                 frameTextEl.style.display = "none";
             }
         }
+
+
 
         const qrConfig = {
             width: 240,
