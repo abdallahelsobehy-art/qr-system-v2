@@ -642,7 +642,11 @@ db.ref("customers/" + id).once("value")
         (data.footer && data.footer.trim() !== "") ? data.footer : "جميع الحقوق محفوظة ✓";
 
     /* تطبيق التصميم المخصص إن وجد */
-    if (data.design) {
+    /* في وضع المعاينة (preview=1) التصميم بييجي عن طريق postMessage
+       من صفحة التصميم مباشرة، فمينفعش نسيب التصميم المحفوظ في
+       Firebase يكتب فوقه لو وصل متأخر - عشان كده الشرط ده مربوط
+       بعدم وجود preview */
+    if (data.design && !preview) {
         applyDesign(data.design);
     }
 
