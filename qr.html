@@ -486,11 +486,12 @@ db.ref("customers/" + id).once("value")
         return;
     }
 
-    /* التوجيه المباشر لو موجود - في وضع المعاينة كمان، عشان
-   شاشة المعاينة تعكس اللي هيحصل فعليًا لو حد عمل سكان للـ QR */
-if (data.redirectUrl && data.redirectUrl.trim() !== "") {
+/* التوجيه المباشر لو موجود ولسنا في وضع المعاينة */
+if (!preview && data.redirectUrl && data.redirectUrl.trim() !== "") {
     window.location.replace(data.redirectUrl.trim());
     return;
+}
+    
 }
     }
 
