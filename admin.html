@@ -504,7 +504,7 @@
         <div class="login-body">
             <div class="input-box">
                 <input type="text" id="adminUsername" placeholder="اسم المستخدم" onkeypress="handleKeyPress(event)">
-                <img src="assets/user-icon.png" class="input-icon-img" alt="مستخدم" style="position:absolute; top:50%; right:15px; transform:translateY(-50%); width:20px; height:20px;">
+                <img src="assets/user-icon.png" class="input-icon-img" alt="مستخدم" style="position:absolute; top:50%; right:15px; transform:translateY(-50%); width:20px; height:20px; pointer-events:none; opacity:0.8;">
             </div>
             
             <div class="input-box">
@@ -629,7 +629,7 @@
             <div class="form-group"><label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني (Gmail)</label><input type="text" id="gmail" placeholder="name@gmail.com"></div>
         </div>
         <div class="grid-2">
-            <div class="form-group"><label><i class="fa-solid fa-location-dot"></i> الموقع الجغرافي (Location)</label><input type="text" id="location" placeholder="رابط خرائط"></div>
+            <div class="form-group"><label><i class="fa-solid fa-location-dot"></i> الموقع الجغرافي (Location)</label><input type="text" id="location" placeholder="رابط خرائط جوجل"></div>
             <div class="form-group"><label><i class="fa-solid fa-star"></i> المراجعات (Review)</label><input type="text" id="review" placeholder="رابط تقييم جوجل"></div>
         </div>
         <div class="grid-2">
@@ -954,10 +954,7 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    // مهم: تعيين مرجع ال DB على window حتى يتمكن iframe من الوصول إليه عبر window.parent.db
-    window.db = firebase.database();
-    // أبقي متغير محلي db للإستخدام الداخلي في نفس الصفحة
-    const db = window.db;
+    window.db = firebase.database(); // window.db عشان تبويب تخصيص الصفحة (iframe) يقدر يوصل له
 
     let qrCodeInstance = null;
 
@@ -1000,12 +997,27 @@
             const nextCode = prefixCode + formattedSeq;
 
             SafeSetValue("code", nextCode);
-            // تعديل: اترك redirectUrl فارغًا افتراضيًا كما طُلب
             SafeSetValue("redirectUrl", "");
         }).catch(err => {
             SafeSetValue("code", prefixCode + "00001");
             SafeSetValue("redirectUrl", "");
         });
+    }
+
+    function handleMainLogoUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                SafeSetValue("logo", e.target.result);
+                const preview = document.getElementById("logoPreview");
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                }
+                updateQRLive();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     function handleQRLogoUpload(input) {
@@ -1110,14 +1122,14 @@
 
         generateQR();
 
-        // استدعاء تحميل إعدادات التبويب 4 داخل iframe إذا كانت متوفرة
+        // تحميل إعدادات التصميم المحفوظة في تبويب تخصيص الصفحة
         try {
-            const frame = document.getElementById("pageDesignerFrame");
-            if (frame && frame.contentWindow && typeof frame.contentWindow.loadCustomerDesign === "function") {
-                frame.contentWindow.loadCustomerDesign(id);
+            const df = document.getElementById("pageDesignerFrame");
+            if (df && df.contentWindow && typeof df.contentWindow.loadCustomerDesign === "function") {
+                df.contentWindow.loadCustomerDesign(id);
             }
         } catch (e) {
-            console.log("Error calling loadCustomerDesign on iframe:", e);
+            console.log("Designer frame not ready");
         }
     }
 
@@ -1154,27 +1166,195 @@
             footer: SafeGetValue("footer")
         };
 
-        // استخدم update بدلاً من set حتى لا يتم حذف الفرع customers/CODE/design
-        db.ref("customers/" + code).update(customerData)
+        db.ref("customers/" + code).update(customerData) // update مش set عشان ما يمسحش فرع design
         .then(function() {
             showCustomAlert("تم حفظ بيانات العميل بنجاح", function() {
                 showCustomConfirm("هل تريد تحميل ملف الـ QR الآن؟", function() {
                     downloadQR();
                 });
             });
-            // لم ننادي clearForm() هنا لتجنب مسح بيانات التصميم المحفوظة في الفرع design
+            clearForm();
         })
         .catch(function(error) {
             showCustomAlert("خطأ أثناء الحفظ: " + error.message);
         });
     }
 
-    // === الوظائف المتعلقة بالـ QR وملفات أخرى موجودة في المشروع (لم يتم لمسها) ===
-    // ملاحظة: تأكد أن الدوال التالية موجودة في ملفات js/ أو في أسفل هذا الملف إذا احتجت:
-    // generateQR, downloadQR, updateQRLive, handleMainLogoUpload, handleQRLogoUpload, deleteCustomer, clearForm, وغيرها.
-    // إذا كانت هذه الدوال موجودة في ملفات js/ منفصلة (كما في المشروع) فستعمل كما هي لأننا لم نغير تحميل هذه الملفات هنا.
+    function deleteCustomer() {
+        const code = SafeGetValue("code");
+        if (!code) {
+            showCustomAlert("يرجى تحديد كود العميل للحذف");
+            return;
+        }
 
+        showCustomConfirm("هل أنت متأكد من حذف هذا العميل نهائياً؟", function() {
+            db.ref("customers/" + code).remove()
+                .then(function() {
+                    showCustomAlert("تم حذف العميل بنجاح", function() {
+                        clearForm();
+                    });
+                })
+                .catch(function(error) {
+                    showCustomAlert("خطأ أثناء الحذف: " + error.message);
+                });
+        });
+    }
+
+    function clearForm() {
+        SafeSetValue("searchCode", "");
+        SafeSetValue("redirectUrl", "");
+        SafeSetValue("name", "");
+        SafeSetValue("description", "");
+        SafeSetValue("logo", "");
+        SafeSetValue("phone", "");
+        SafeSetValue("qrCustomLogo", "");
+        SafeSetValue("whatsapp", "");
+        SafeSetValue("telegram", "");
+        SafeSetValue("messenger", "");
+        SafeSetValue("facebook", "");
+        SafeSetValue("instagram", "");
+        SafeSetValue("tiktok", "");
+        SafeSetValue("snapchat", "");
+        SafeSetValue("pinterest", "");
+        SafeSetValue("youtube", "");
+        SafeSetValue("linkedin", "");
+        SafeSetValue("website", "");
+        SafeSetValue("catalog", "");
+        SafeSetValue("gmail", "");
+        SafeSetValue("location", "");
+        SafeSetValue("review", "");
+        SafeSetValue("instapay", "");
+        SafeSetValue("vodafonecash", "");
+        SafeSetValue("footer", "");
+        document.getElementById("customerSelect").value = "";
+        const preview = document.getElementById("logoPreview");
+        if (preview) preview.style.display = "none";
+        
+        generateNextCustomerCode();
+    }
+
+    function updateQRLive() {
+        const code = SafeGetValue("code");
+        if (code) {
+            generateQR();
+        }
+    }
+
+    function generateQR() {
+        const code = SafeGetValue("code");
+        if (!code) return;
+
+        const qrContainer = document.getElementById("qrContainer");
+        qrContainer.innerHTML = "";
+
+        const targetURL = window.location.origin + window.location.pathname.replace("admin.html", "qr.html") + "?id=" + encodeURIComponent(code);
+
+        const dotColor = SafeGetValue("qrDotColor") || "#000000";
+        const bgColor = SafeGetValue("qrBgColor") || "#ffffff";
+        const dotType = SafeGetValue("qrDotType") || "square";
+        
+        const cornerType = SafeGetValue("qrCornerType") || "square";
+        const cornerColor = SafeGetValue("qrCornerColor") || dotColor;
+        
+        const cornerDotType = SafeGetValue("qrCornerDotType") || "square";
+        const cornerDotColor = SafeGetValue("qrCornerDotColor") || dotColor;
+
+        const embedLogo = SafeGetValue("qrEmbedLogo");
+        const finalLogo = SafeGetValue("qrCustomLogo") || SafeGetValue("logo");
+
+        const frameStyle = SafeGetValue("qrFrameStyle") || "none";
+        const frameColor = SafeGetValue("qrFrameColor") || "#000000";
+        const framePhrase = SafeGetValue("qrFramePhrase") || "SCAN ME";
+
+        const frameWrapper = document.getElementById("qrFrameWrapper");
+        const frameTextEl = document.getElementById("qrFrameText");
+
+        if (frameStyle === "none") {
+            frameWrapper.style.border = "none";
+            frameWrapper.style.borderRadius = "0px";
+            frameTextEl.style.display = "none";
+        } else {
+            frameWrapper.style.border = "4px solid " + frameColor;
+            if (frameStyle === "square") {
+                frameWrapper.style.borderRadius = "4px";
+            } else if (frameStyle === "rounded") {
+                frameWrapper.style.borderRadius = "12px";
+            } else if (frameStyle === "pill") {
+                frameWrapper.style.borderRadius = "24px";
+            }
+            
+            
+            if (framePhrase.trim() !== "") {
+                frameTextEl.textContent = framePhrase;
+                frameTextEl.style.color = frameColor;
+                frameTextEl.style.display = "block";
+            } else {
+                frameTextEl.style.display = "none";
+            }
+        }
+
+        const qrConfig = {
+            width: 240,
+            height: 240,
+            type: "svg",
+            data: targetURL,
+            dotsOptions: {
+                color: dotColor,
+                type: dotType
+            },
+            backgroundOptions: {
+                color: bgColor,
+            },
+            cornersSquareOptions: {
+                color: cornerColor,
+                type: cornerType
+            },
+            cornersDotOptions: {
+                color: cornerDotColor,
+                type: cornerDotType
+            }
+        };
+
+        if (embedLogo === "yes" && finalLogo) {
+            qrConfig.image = finalLogo;
+            qrConfig.imageOptions = {
+                crossOrigin: "anonymous",
+                margin: 5,
+                imageSize: 0.4
+            };
+        }
+
+        qrCodeInstance = new QRCodeStyling(qrConfig);
+        qrCodeInstance.append(qrContainer);
+
+        const designerFrame = document.getElementById("pageDesignerFrame");
+        if (designerFrame) {
+            const customerId = SafeGetValue("code");
+            try {
+                if (designerFrame.contentWindow && typeof designerFrame.contentWindow.updatePagePreview === "function") {
+                    designerFrame.contentWindow.updatePagePreview(customerId);
+                }
+            } catch(e) {
+                console.log("Preview Frame Not Ready");
+            }
+        }
+    }
+
+    function downloadQR() {
+        if (!qrCodeInstance) {
+            showCustomAlert("يرجى توليد الـ QR أولاً");
+            return;
+        }
+
+        const format = document.getElementById("downloadFormat").value;
+        const size = parseInt(document.getElementById("downloadSize").value);
+        const code = SafeGetValue("code") || "qrcode";
+
+        qrCodeInstance.download({
+            name: code,
+            extension: format
+        });
+    }
 </script>
-
 </body>
     </html>
