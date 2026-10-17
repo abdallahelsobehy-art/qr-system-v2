@@ -609,6 +609,8 @@ let designData = {
     logoImage: ""
 };
 
+const DEFAULT_DESIGN = JSON.parse(JSON.stringify(designData));
+
 // تلوين الجزء المستخدم من شريط التمرير باللون المطلوب
 function updateRangeFill(slider) {
     const min = parseFloat(slider.min) || 0;
@@ -867,39 +869,48 @@ document.getElementById("buttonShadow")?.addEventListener("input", function() {
     document.getElementById("buttonShadowValue").textContent = this.value + "px";
 });
 
+/* نافذة التنبيه: بتستخدم نافذة admin.html المخصصة، ولو مش متاحة بترجع للـ alert العادي */
+function notify(msg, cb) {
+    try {
+        if (window.parent && typeof window.parent.showCustomAlert === "function") {
+            window.parent.showCustomAlert(msg, cb);
+            return;
+        }
+    } catch (e) {}
+    alert(msg);
+    if (cb) cb();
+}
+
+function getParentDb() {
+    try {
+        return (window.parent && window.parent.db) ? window.parent.db : null;
+    } catch (e) {
+        return null;
+    }
+}
+
 function saveDesignSettings() {
-    // إذا currentLoadedCode فاضي، حاول نقرأه من حقل الكود في صفحة الادمن
     if (!currentLoadedCode) {
         try {
-            const parentDoc = window.parent.document;
-            const codeInput = parentDoc.getElementById("code");
-            if (codeInput && codeInput.value) {
-                currentLoadedCode = codeInput.value;
-            }
-        } catch (e) {
-            // لا تفشل بصمت
-        }
+            const el = window.parent.document.getElementById("code");
+            if (el && el.value) currentLoadedCode = el.value.trim();
+        } catch (e) {}
     }
-
     if (!currentLoadedCode) {
-        alert("لا يوجد عميل محدد لحفظ إعدادات التصميم الخاصة به.");
+        notify("لا يوجد عميل محدد لحفظ إعدادات التصميم الخاصة به.");
+        return;
+    }
+    updateDesignData();
+
+    const parentDb = getParentDb();
+    if (!parentDb) {
+        notify("تعذر الاتصال بقاعدة البيانات. افتح الصفحة من admin.html وتأكد من اتصال الإنترنت.");
         return;
     }
 
-    updateDesignData();
-    try {
-        const parentWindow = window.parent;
-        if (parentWindow && parentWindow.db) {
-            parentWindow.db.ref("customers/" + currentLoadedCode + "/design").set(designData)
-            .then(() => alert("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!"))
-            .catch(err => alert("حدث خطأ أثناء الحفظ: " + err.message));
-        } else {
-            // في حالة عدم وجود مرجع لقاعدة البيانات في parent، أعطِ رسالة خطأ واضحة
-            alert("تعذر الاتصال بقاعدة البيانات. تأكد من فتح صفحة الإدارة ثم حاول مجدداً.");
-        }
-    } catch (e) {
-        alert("تم تطبيق التصميم محلياً بنجاح.");
-    }
+    parentDb.ref("customers/" + currentLoadedCode + "/design").set(designData)
+        .then(() => notify("تم حفظ إعدادات التصميم الخاصة بالعميل بنجاح!"))
+        .catch(err => notify("حدث خطأ أثناء الحفظ: " + err.message));
 }
 
 function syncWithAdmin(){
@@ -922,191 +933,85 @@ function syncWithAdmin(){
     }
 }
 
-function resetDesignFormToDefaults() {
-    // Reset designData to initial defaults
-    designData = {
-        backgroundType: "default",
-        backgroundImage: "",
-        buttonBgType: "default",
-        buttonBgImage: "",
-        coverType: "default",
-        coverImage: "",
-        fontFamily: "'Cairo', sans-serif",
-        fontColor: "#ffffff",
-        fontSize: "20",
-        buttonBgColor: "#3d485b",
-        buttonTextColor: "#ffffff",
-        iconColor: "#ffffff",
-        buttonRadius: "18",
-        buttonShadow: "6",
-        iconSize: "medium",
-        iconPosition: "right",
-        iconShape: "square",
-        logoType: "default",
-        logoImage: ""
-    };
+/* ===== مزامنة عناصر التحكم مع بيانات التصميم ===== */
+function setRadioUI(fnName, type, containerId) {
+    document.querySelectorAll('label[onclick*="' + fnName + '"]').forEach(el => {
+        const isActive = (el.getAttribute('onclick') || "").indexOf("'" + type + "'") !== -1;
+        el.classList.toggle('active', isActive);
+        const r = el.querySelector('input[type="radio"]');
+        if (r) r.checked = isActive;
+    });
+    const c = document.getElementById(containerId);
+    if (c) c.style.display = (type === "upload") ? "block" : "none";
+}
 
-    // Update inputs
-    document.getElementById("fontFamily").value = designData.fontFamily;
-    document.getElementById("fontColor").value = designData.fontColor;
-    document.getElementById("fontSize").value = designData.fontSize;
-    document.getElementById("fontSizeValue").textContent = designData.fontSize + "px";
-    document.getElementById("buttonBgColor").value = designData.buttonBgColor;
-    document.getElementById("buttonTextColor").value = designData.buttonTextColor;
-    document.getElementById("iconColor").value = designData.iconColor;
-    document.getElementById("buttonRadius").value = designData.buttonRadius;
-    document.getElementById("buttonRadiusValue").textContent = designData.buttonRadius + "px";
-    document.getElementById("buttonShadow").value = designData.buttonShadow;
-    document.getElementById("buttonShadowValue").textContent = designData.buttonShadow + "px";
+function setOptionUI(fnName, value) {
+    document.querySelectorAll('.option-box[onclick*="' + fnName + '"]').forEach(el => {
+        const isActive = (el.getAttribute('onclick') || "").indexOf("'" + value + "'") !== -1;
+        el.classList.toggle('active', isActive);
+    });
+}
 
-    // Reset previews and upload containers
-    setBgPreview("bgImagePreview", "");
-    setBgPreview("btnBgImagePreview", "");
-    setBgPreview("coverImagePreview", "");
-    setBgPreview("logoImagePreview", "");
-    document.getElementById("bgUrlInput").value = "";
-    document.getElementById("btnBgUrlInput").value = "";
-    document.getElementById("coverUrlInput").value = "";
-    document.getElementById("customLogoUrlInput").value = "";
+function setCtrl(id, val) {
+    const el = document.getElementById(id);
+    if (el && val !== undefined && val !== null) el.value = val;
+}
 
-    // Ensure default radio/option states (click defaults)
-    const bgDefault = document.querySelector(`label[onclick*="selectBackgroundType(this, 'default')"]`);
-    if (bgDefault) selectBackgroundType(bgDefault, 'default');
+function setCtrlText(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+}
 
-    const btnBgDefault = document.querySelector(`label[onclick*="selectButtonBgType(this, 'default')"]`);
-    if (btnBgDefault) selectButtonBgType(btnBgDefault, 'default');
+function applyDesignToControls(d) {
+    setCtrl("fontFamily", d.fontFamily);
+    setCtrl("fontColor", d.fontColor);
+    setCtrl("fontSize", d.fontSize);
+    setCtrlText("fontSizeValue", d.fontSize + "px");
+    setCtrl("buttonBgColor", d.buttonBgColor);
+    setCtrl("buttonTextColor", d.buttonTextColor);
+    setCtrl("iconColor", d.iconColor);
+    setCtrl("buttonRadius", d.buttonRadius);
+    setCtrlText("buttonRadiusValue", d.buttonRadius + "px");
+    setCtrl("buttonShadow", d.buttonShadow);
+    setCtrlText("buttonShadowValue", d.buttonShadow + "px");
 
-    const coverDefault = document.querySelector(`label[onclick*="selectCoverType(this, 'default')"]`);
-    if (coverDefault) selectCoverType(coverDefault, 'default');
+    setRadioUI("selectBackgroundType", d.backgroundType || "default", "bgUploadContainer");
+    setCtrl("bgUrlInput", d.backgroundImage || "");
+    setBgPreview("bgImagePreview", d.backgroundImage);
 
-    const logoDefault = document.querySelector(`label[onclick*="selectLogoType(this, 'default')"]`);
-    if (logoDefault) selectLogoType(logoDefault, 'default');
+    setRadioUI("selectButtonBgType", d.buttonBgType || "default", "btnBgUploadContainer");
+    setCtrl("btnBgUrlInput", d.buttonBgImage || "");
+    setBgPreview("btnBgImagePreview", d.buttonBgImage);
 
-    const iconSizeDefault = document.querySelector(`div[onclick*="selectIconSize(this, 'medium')"]`);
-    if (iconSizeDefault) selectIconSize(iconSizeDefault, 'medium');
+    setRadioUI("selectCoverType", d.coverType || "default", "coverUploadContainer");
+    setCtrl("coverUrlInput", d.coverImage || "");
+    setBgPreview("coverImagePreview", d.coverImage);
 
-    const iconPosDefault = document.querySelector(`div[onclick*="selectIconPosition(this, 'right')"]`);
-    if (iconPosDefault) selectIconPosition(iconPosDefault, 'right');
+    setRadioUI("selectLogoType", d.logoType || "default", "logoUploadContainer");
+    setCtrl("customLogoUrlInput", d.logoImage || "");
+    setBgPreview("logoImagePreview", d.logoImage);
 
-    const iconShapeDefault = document.querySelector(`div[onclick*="selectIconShape(this, 'square')"]`);
-    if (iconShapeDefault) selectIconShape(iconShapeDefault, 'square');
+    setOptionUI("selectIconSize", d.iconSize || "medium");
+    setOptionUI("selectIconPosition", d.iconPosition || "right");
+    setOptionUI("selectIconShape", d.iconShape || "square");
 
     initRanges();
-    sendDesignToPreview();
 }
 
 function loadCustomerDesign(code) {
     if (!code) return;
-    try {
-        const parentWindow = window.parent;
-        if (parentWindow && parentWindow.db) {
-            parentWindow.db.ref("customers/" + code + "/design").once("value").then(snapshot => {
-                const design = snapshot.val();
-                // لو مفيش تصميم محفوظ، نعيد القيم الافتراضية كاملة
-                if (!design) {
-                    resetDesignFormToDefaults();
-                    currentLoadedCode = code;
-                    return;
-                }
+    currentLoadedCode = code;
 
-                // لو فيه تصميم موجود، ندمجه مع designData ثم نحدث واجهة المستخدم بالكامل
-                designData = { ...designData, ...design };
-                if(design.fontFamily) document.getElementById("fontFamily").value = design.fontFamily;
-                if(design.fontColor) document.getElementById("fontColor").value = design.fontColor;
-                if(design.fontSize) {
-                    document.getElementById("fontSize").value = design.fontSize;
-                    document.getElementById("fontSizeValue").textContent = design.fontSize + "px";
-                }
-                if(design.buttonBgColor) document.getElementById("buttonBgColor").value = design.buttonBgColor;
-                if(design.buttonTextColor) document.getElementById("buttonTextColor").value = design.buttonTextColor;
-                if(design.iconColor) document.getElementById("iconColor").value = design.iconColor;
-                if(design.buttonRadius) {
-                    document.getElementById("buttonRadius").value = design.buttonRadius;
-                    document.getElementById("buttonRadiusValue").textContent = design.buttonRadius + "px";
-                }
-                if(design.buttonShadow) {
-                    document.getElementById("buttonShadow").value = design.buttonShadow;
-                    document.getElementById("buttonShadowValue").textContent = design.buttonShadow + "px";
-                }
+    const parentDb = getParentDb();
+    if (!parentDb) return;
 
-                // معاينات الصور وحقول الروابط
-                if (design.backgroundImage) {
-                    document.getElementById("bgUrlInput").value = design.backgroundImage;
-                    setBgPreview("bgImagePreview", design.backgroundImage);
-                } else {
-                    document.getElementById("bgUrlInput").value = "";
-                    setBgPreview("bgImagePreview", "");
-                }
-
-                if (design.buttonBgImage) {
-                    document.getElementById("btnBgUrlInput").value = design.buttonBgImage;
-                    setBgPreview("btnBgImagePreview", design.buttonBgImage);
-                } else {
-                    document.getElementById("btnBgUrlInput").value = "";
-                    setBgPreview("btnBgImagePreview", "");
-                }
-
-                if (design.coverImage) {
-                    document.getElementById("coverUrlInput").value = design.coverImage;
-                    setBgPreview("coverImagePreview", design.coverImage);
-                } else {
-                    document.getElementById("coverUrlInput").value = "";
-                    setBgPreview("coverImagePreview", "");
-                }
-
-                if (design.logoImage) {
-                    document.getElementById("customLogoUrlInput").value = design.logoImage;
-                    setBgPreview("logoImagePreview", design.logoImage);
-                } else {
-                    document.getElementById("customLogoUrlInput").value = "";
-                    setBgPreview("logoImagePreview", "");
-                }
-
-                // تحديث حالات الراديو والـ option boxes باستخدام النقر على السيلكتورات المناسبة (لتحديث الـ active و checked)
-                try {
-                    if (design.backgroundType) {
-                        const el = document.querySelector(`label[onclick*="selectBackgroundType(this, '${design.backgroundType}')"]`);
-                        if (el) selectBackgroundType(el, design.backgroundType);
-                    }
-                    if (design.buttonBgType) {
-                        const el = document.querySelector(`label[onclick*="selectButtonBgType(this, '${design.buttonBgType}')"]`);
-                        if (el) selectButtonBgType(el, design.buttonBgType);
-                    }
-                    if (design.coverType) {
-                        const el = document.querySelector(`label[onclick*="selectCoverType(this, '${design.coverType}')"]`);
-                        if (el) selectCoverType(el, design.coverType);
-                    }
-                    if (design.logoType) {
-                        const el = document.querySelector(`label[onclick*="selectLogoType(this, '${design.logoType}')"]`);
-                        if (el) selectLogoType(el, design.logoType);
-                    }
-
-                    if (design.iconSize) {
-                        const el = document.querySelector(`div[onclick*="selectIconSize(this, '${design.iconSize}')"]`);
-                        if (el) selectIconSize(el, design.iconSize);
-                    }
-
-                    if (design.iconPosition) {
-                        const el = document.querySelector(`div[onclick*="selectIconPosition(this, '${design.iconPosition}')"]`);
-                        if (el) selectIconPosition(el, design.iconPosition);
-                    }
-
-                    if (design.iconShape) {
-                        const el = document.querySelector(`div[onclick*="selectIconShape(this, '${design.iconShape}')"]`);
-                        if (el) selectIconShape(el, design.iconShape);
-                    }
-                } catch (e) {
-                    console.log("Error setting active option elements:", e);
-                }
-
-                initRanges();
-                sendDesignToPreview();
-                currentLoadedCode = code;
-            });
-        }
-    } catch(e) {
-        console.log("loadCustomerDesign error:", e);
-    }
+    parentDb.ref("customers/" + code + "/design").once("value").then(snapshot => {
+        const design = snapshot.val();
+        // لو العميل ملوش تصميم محفوظ نرجع للقيم الافتراضية بدل بيانات العميل السابق
+        designData = Object.assign({}, DEFAULT_DESIGN, design || {});
+        applyDesignToControls(designData);
+        if (design) sendDesignToPreview();
+    }).catch(err => console.log("Load design error:", err));
 }
 
 window.onload = function(){
@@ -1116,4 +1021,4 @@ window.onload = function(){
 </script>
 
 </body>
-    </html>
+</html>
